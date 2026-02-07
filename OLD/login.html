@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CarCare - Login">
+    <title>Login - CarCare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <div class="login-header">
+                <div class="login-logo">
+                    <i class="fas fa-car"></i>
+                </div>
+                <h1>CarCare</h1>
+                <p>Sistema de Controle de Manutenção Veicular</p>
+                <button type="button" class="btn btn-sm btn-secondary" id="btnDarkModeLogin" style="margin-top: 15px;">
+                    <i class="fas fa-moon"></i> Modo Escuro
+                </button>
+            </div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginUsername">
+                        <i class="fas fa-user"></i> Usuário
+                    </label>
+                    <input 
+                        type="text" 
+                        id="loginUsername" 
+                        placeholder="Digite seu usuário" 
+                        required 
+                        autocomplete="username"
+                        autofocus>
+                </div>
+                
+                <div class="form-group">
+                    <label for="loginPassword">
+                        <i class="fas fa-lock"></i> Senha
+                    </label>
+                    <input 
+                        type="password" 
+                        id="loginPassword" 
+                        placeholder="Digite sua senha" 
+                        required
+                        autocomplete="current-password">
+                </div>
+                
+                <div id="loginError" class="alert alert-danger hidden" style="margin-bottom: 20px;">
+                    Usuário ou senha inválidos
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </button>
+            </form>
+            
+            <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid var(--gray-light); text-align: center;">
+                <p style="color: var(--gray); font-size: 14px;">
+                    <i class="fas fa-info-circle"></i> Acesso padrão
+                </p>
+                <p style="color: var(--dark); font-weight: 600; margin-top: 8px; font-size: 13px;">
+                    Usuário: <code style="background: var(--light); padding: 2px 8px; border-radius: 4px;">admin</code>
+                    <br>
+                    Senha: <code style="background: var(--light); padding: 2px 8px; border-radius: 4px;">admin123</code>
+                </p>
+            </div>
+            
+            <div style="margin-top: 30px; text-align: center;">
+                <p style="color: var(--gray); font-size: 13px;">
+                    &copy; 2026 CarCare - Todos os direitos reservados
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="js/auth.js"></script>
+    <script>
+        // Verificar e aplicar modo escuro
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        if (isDark) {
+            document.body.classList.add('dark-mode');
+            const btnDarkMode = document.getElementById('btnDarkModeLogin');
+            if (btnDarkMode) {
+                btnDarkMode.innerHTML = '<i class="fas fa-sun"></i> Modo Claro';
+            }
+        }
+        
+        // Toggle modo escuro no login
+        const btnDarkModeLogin = document.getElementById('btnDarkModeLogin');
+        if (btnDarkModeLogin) {
+            btnDarkModeLogin.addEventListener('click', () => {
+                document.body.classList.toggle('dark-mode');
+                const isDarkNow = document.body.classList.contains('dark-mode');
+                localStorage.setItem('darkMode', isDarkNow);
+                btnDarkModeLogin.innerHTML = isDarkNow ? 
+                    '<i class="fas fa-sun"></i> Modo Claro' : 
+                    '<i class="fas fa-moon"></i> Modo Escuro';
+            });
+        }
+        
+        // Se já estiver logado, redirecionar para a aplicação
+        if (Auth.isLoggedIn()) {
+            window.location.href = 'index.html';
+        }
+        
+        // Configurar formulário de login
+        const loginForm = document.getElementById('loginForm');
+        const loginError = document.getElementById('loginError');
+        
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            const result = Auth.login(username, password);
+            
+            if (result.success) {
+                // Redirecionar para a aplicação principal
+                window.location.href = 'index.html';
+            } else {
+                // Mostrar erro
+                loginError.textContent = result.message;
+                loginError.classList.remove('hidden');
+                
+                // Esconder erro após 3 segundos
+                setTimeout(() => {
+                    loginError.classList.add('hidden');
+                }, 3000);
+                
+                // Limpar senha
+                document.getElementById('loginPassword').value = '';
+                document.getElementById('loginPassword').focus();
+            }
+        });
+    </script>
+</body>
+</html>

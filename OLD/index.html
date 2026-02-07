@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="CarCare - Sistema completo de controle de manutenção veicular">
+    <title>CarCare - Controle de Manutenção</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dark-mode.css">
+    <link rel="stylesheet" href="css/filters.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <i class="fas fa-car"></i>
+                <h1>CarCare</h1>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-sm btn-secondary" id="btnVehicleSelector" title="Selecionar Veículo">
+                    <i class="fas fa-car-side"></i> Veículos
+                </button>
+                <button class="btn btn-sm btn-secondary" id="btnDarkMode" title="Modo Escuro">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="notification-btn" id="btnNotification" title="Notificações">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge hidden" id="notificationBadge">
+                        <span id="notificationCount">0</span>
+                    </span>
+                </button>
+                <button class="btn btn-sm btn-primary" id="btnUserManagement" title="Gerenciar Usuários" style="display: none;">
+                    <i class="fas fa-users-cog"></i>
+                </button>
+                <div class="user-menu" onclick="handleLogout()">
+                    <div class="user-avatar" id="userAvatar">A</div>
+                    <span class="user-name" id="userName">Admin</span>
+                    <i class="fas fa-sign-out-alt"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <div class="container">
+        <!-- SEÇÃO DO VEÍCULO -->
+        <section class="section" id="vehicleSection">
+            <div class="section-title">
+                <h2><i class="fas fa-car-side"></i> Meu Veículo</h2>
+                <div>
+                    <button class="btn btn-secondary btn-sm" id="btnIPVA" title="IPVA e Licenciamento">
+                        <i class="fas fa-file-invoice-dollar"></i> IPVA
+                    </button>
+                    <button class="btn btn-primary" id="btnEditVehicle">
+                        <i class="fas fa-edit"></i> Editar
+                    </button>
+                </div>
+            </div>
+            
+            <div class="vehicle-card">
+                <h3 id="vehicleModel">Carregando...</h3>
+                <div class="vehicle-info">
+                    <div class="info-item">
+                        <span class="info-label">Placa</span>
+                        <span class="info-value" id="vehiclePlate">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Ano</span>
+                        <span class="info-value" id="vehicleYear">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Km Atual</span>
+                        <span class="info-value" id="vehicleKm">-</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Próxima Manutenção</span>
+                        <span class="info-value" id="nextMaintenance">-</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- SEÇÃO DE MANUTENÇÕES -->
+        <section class="section" id="maintenanceSection">
+            <div class="section-title">
+                <h2><i class="fas fa-tools"></i> Histórico de Manutenções</h2>
+                <button class="btn btn-primary" id="btnAddMaintenance">
+                    <i class="fas fa-plus"></i> Nova
+                </button>
+            </div>
+            
+            <!-- FILTROS -->
+            <div class="filters-section">
+                <div class="filters-header">
+                    <h3><i class="fas fa-filter"></i> Filtros de Pesquisa</h3>
+                    <button class="btn btn-sm btn-secondary" id="btnClearFilters">
+                        <i class="fas fa-times"></i> Limpar
+                    </button>
+                </div>
+                <div class="filters-grid">
+                    <div class="form-group">
+                        <label for="filterDateFrom"><i class="fas fa-calendar-alt"></i> Data Inicial</label>
+                        <input type="date" id="filterDateFrom" placeholder="dd/mm/aaaa">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterDateTo"><i class="fas fa-calendar-alt"></i> Data Final</label>
+                        <input type="date" id="filterDateTo" placeholder="dd/mm/aaaa">
+                    </div>
+                    <div class="form-group">
+                        <label for="filterCategory"><i class="fas fa-tag"></i> Categoria</label>
+                        <select id="filterCategory">
+                            <option value="">Todas as categorias</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="filterSearch"><i class="fas fa-search"></i> Buscar</label>
+                        <input type="text" id="filterSearch" placeholder="Tipo, descrição, local...">
+                    </div>
+                </div>
+                <div class="filters-actions">
+                    <button class="btn btn-primary" id="btnApplyFilters">
+                        <i class="fas fa-check"></i> Aplicar Filtros
+                    </button>
+                    <span class="filter-results" id="filterResults"></span>
+                </div>
+            </div>
+            
+            <div class="maintenance-list" id="maintenanceList">
+                <!-- As manutenções serão inseridas aqui via JavaScript -->
+            </div>
+            
+            <div class="empty-state" id="emptyState">
+                <i class="fas fa-clipboard-list"></i>
+                <h3>Nenhuma manutenção registrada</h3>
+                <p class="mt-2">Clique em "Nova" para adicionar sua primeira manutenção</p>
+            </div>
+        </section>
+        
+        <!-- RESUMO DE CUSTOS -->
+        <section class="section" id="costSection">
+            <div class="section-title">
+                <h2><i class="fas fa-chart-pie"></i> Resumo de Custos</h2>
+                <button class="btn btn-secondary btn-sm" id="btnBackup">
+                    <i class="fas fa-download"></i> Backup
+                </button>
+            </div>
+            
+            <div class="vehicle-info">
+                <div class="info-item">
+                    <span class="info-label">Total Gasto</span>
+                    <span class="info-value currency" id="totalSpent">R$ 0,00</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Média por Km</span>
+                    <span class="info-value" id="avgPerKm">R$ 0,00/km</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Última Manutenção</span>
+                    <span class="info-value" id="lastMaintenance">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Total de Serviços</span>
+                    <span class="info-value" id="totalServices">0</span>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- MODAL PARA EDITAR VEÍCULO -->
+    <div class="modal" id="vehicleModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-car-side"></i> Editar Veículo</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="vehicleForm">
+                    <div class="form-group">
+                        <label for="inputMarca">Marca *</label>
+                        <input type="text" id="inputMarca" placeholder="Ex: Ford" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputModelo">Modelo *</label>
+                        <input type="text" id="inputModelo" placeholder="Ex: Focus" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputAno">Ano *</label>
+                        <input type="number" id="inputAno" min="1900" max="2030" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputPlaca">Placa *</label>
+                        <input type="text" id="inputPlaca" placeholder="Ex: ABC-1234" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputKm">Quilometragem Atual *</label>
+                        <input type="number" id="inputKm" placeholder="Em km" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-save"></i> Salvar Veículo
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- MODAL PARA ADICIONAR/EDITAR MANUTENÇÃO -->
+    <div class="modal" id="maintenanceModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-tools"></i> Manutenção</h2>
+                <button class="close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="maintenanceForm">
+                    <div class="form-group">
+                        <label for="inputTipo">Tipo de Serviço *</label>
+                        <input type="text" id="inputTipo" placeholder="Ex: Troca de óleo" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputCategoria">Categoria</label>
+                        <select id="inputCategoria">
+                            <option value="">Selecione uma categoria...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputData">Data *</label>
+                        <input type="date" id="inputData" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputQuilometragem">Quilometragem *</label>
+                        <input type="number" id="inputQuilometragem" placeholder="Em km" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputDescricao">Descrição</label>
+                        <textarea id="inputDescricao" placeholder="Detalhes do serviço realizado..."></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputLocal">Local/Oficina</label>
+                        <input type="text" id="inputLocal" placeholder="Onde foi realizado">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputValor">Valor (R$)</label>
+                        <input type="number" step="0.01" id="inputValor" placeholder="0,00">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputProximaTroca">Próxima troca em (km)</label>
+                        <input type="number" id="inputProximaTroca" placeholder="Opcional">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="inputFoto">Foto (256x256px)</label>
+                        <div class="file-input-wrapper">
+                            <input type="file" id="inputFoto" accept="image/*">
+                            <label for="inputFoto" class="file-input-label">
+                                <i class="fas fa-camera"></i>
+                                <span>Selecionar foto</span>
+                            </label>
+                        </div>
+                        <div id="imagePreview" class="image-preview hidden"></div>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-block">
+                        <i class="fas fa-save"></i> Salvar Manutenção
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <!-- NAVEGAÇÃO INFERIOR -->
+    <nav class="bottom-nav">
+        <a href="#" class="nav-item active" data-page="home">
+            <i class="fas fa-home"></i>
+            <span>Início</span>
+        </a>
+        <a href="#" class="nav-item" data-page="vehicles">
+            <i class="fas fa-car"></i>
+            <span>Veículos</span>
+        </a>
+        <a href="#" class="nav-item" id="navAdd">
+            <i class="fas fa-plus-circle"></i>
+            <span>Adicionar</span>
+        </a>
+        <a href="#" class="nav-item" data-page="categories">
+            <i class="fas fa-tags"></i>
+            <span>Categorias</span>
+        </a>
+        <a href="#" class="nav-item" data-page="about">
+            <i class="fas fa-info-circle"></i>
+            <span>Sobre</span>
+        </a>
+    </nav>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/vehicles.js"></script>
+    <script src="js/ipva.js"></script>
+    <script src="js/user-management.js"></script>
+    <script src="js/app.js"></script>
+    
+    <script>
+        // Verificar se está logado
+        if (!Auth.isLoggedIn()) {
+            window.location.href = 'login.html';
+        } else {
+            // Atualizar informações do usuário no header
+            const user = Auth.getCurrentUser();
+            if (user) {
+                document.getElementById('userName').textContent = user.name;
+                document.getElementById('userAvatar').textContent = user.name.charAt(0).toUpperCase();
+            }
+        }
+    </script>
+</body>
+</html>

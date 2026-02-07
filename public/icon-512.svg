@@ -1,0 +1,37 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="512" height="512" rx="80" fill="#2563EB"/>
+  
+  <!-- Car Icon -->
+  <g transform="translate(128, 160)">
+    <!-- Car Body -->
+    <path d="M32 128L48 75H208L224 128M32 128V171C32 176.523 36.4772 181 42 181H53C58.5228 181 63 176.523 63 171V160H193V171C193 176.523 197.477 181 203 181H214C219.523 181 224 176.523 224 171V128M32 128H224M224 128V75H32V128" 
+          stroke="white" 
+          stroke-width="16" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          fill="none"/>
+    
+    <!-- Wheels -->
+    <circle cx="64" cy="160" r="21" fill="white"/>
+    <circle cx="192" cy="160" r="21" fill="white"/>
+    
+    <!-- Windows -->
+    <path d="M64 75L80 43H176L192 75" 
+          stroke="white" 
+          stroke-width="12" 
+          stroke-linecap="round" 
+          stroke-linejoin="round"
+          fill="none"/>
+    
+    <!-- Detail lines -->
+    <line x1="128" y1="75" x2="128" y2="128" stroke="white" stroke-width="8"/>
+  </g>
+  
+  <!-- Wrench Icon (decorative, bottom right) -->
+  <g transform="translate(320, 320)">
+    <path d="M39.2 16.8a4 4 0 0 0 0 5.6l6.4 6.4a4 4 0 0 0 5.6 0l15.08-15.08a24 24 0 0 1-31.76 31.76L6.92 73.08a8.48 8.48 0 0 1-12-12l27.6-27.6a24 24 0 0 1 31.76-31.76l-15.04 15.04z" 
+          fill="white" 
+          transform="scale(2.5)"/>
+  </g>
+</svg>

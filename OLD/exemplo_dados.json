@@ -1,0 +1,92 @@
+{
+  "veiculo": {
+    "marca": "Ford",
+    "modelo": "Focus",
+    "ano": 2020,
+    "placa": "ABC-1234",
+    "quilometragem": 52000
+  },
+  "manutencoes": [
+    {
+      "id": 1,
+      "tipo": "Troca de óleo e filtros",
+      "data": "2026-01-15",
+      "quilometragem": 50000,
+      "descricao": "Óleo sintético 5W30, filtro de óleo, filtro de ar e filtro de combustível",
+      "local": "Oficina Central",
+      "valor": 350.00,
+      "proximaTroca": 55000,
+      "categoriaId": 1,
+      "foto": null,
+      "criadoEm": "2026-01-15T10:30:00.000Z"
+    },
+    {
+      "id": 2,
+      "tipo": "Alinhamento e balanceamento",
+      "data": "2025-12-10",
+      "quilometragem": 48000,
+      "descricao": "Alinhamento 3D e balanceamento dos 4 pneus. Calibragem ajustada.",
+      "local": "Pneu Center",
+      "valor": 180.00,
+      "proximaTroca": 53000,
+      "categoriaId": 4,
+      "foto": null,
+      "criadoEm": "2025-12-10T14:20:00.000Z"
+    },
+    {
+      "id": 3,
+      "tipo": "Troca de pastilhas de freio",
+      "data": "2025-10-05",
+      "quilometragem": 45000,
+      "descricao": "Pastilhas dianteiras trocadas. Discos verificados e em bom estado.",
+      "local": "Freios & Cia",
+      "valor": 420.00,
+      "proximaTroca": 65000,
+      "categoriaId": 3,
+      "foto": null,
+      "criadoEm": "2025-10-05T09:15:00.000Z"
+    },
+    {
+      "id": 4,
+      "tipo": "Revisão dos 40.000 km",
+      "data": "2025-08-20",
+      "quilometragem": 40000,
+      "descricao": "Revisão completa conforme manual. Verificação de suspensão, freios, fluidos e sistema elétrico.",
+      "local": "Concessionária Ford",
+      "valor": 890.00,
+      "proximaTroca": 50000,
+      "categoriaId": 12,
+      "foto": null,
+      "criadoEm": "2025-08-20T11:00:00.000Z"
+    },
+    {
+      "id": 5,
+      "tipo": "Recarga do ar condicionado",
+      "data": "2025-07-10",
+      "quilometragem": 38500,
+      "descricao": "Recarga do gás R134a e limpeza do sistema. Filtro da cabine trocado.",
+      "local": "Climatização Auto",
+      "valor": 280.00,
+      "proximaTroca": null,
+      "categoriaId": 7,
+      "foto": null,
+      "criadoEm": "2025-07-10T15:45:00.000Z"
+    }
+  ],
+  "categorias": [
+    { "id": 1, "nome": "Troca de óleo", "cor": "#10b981", "icone": "fa-oil-can" },
+    { "id": 2, "nome": "Filtros", "cor": "#3b82f6", "icone": "fa-filter" },
+    { "id": 3, "nome": "Freios", "cor": "#ef4444", "icone": "fa-brake-warning" },
+    { "id": 4, "nome": "Pneus", "cor": "#8b5cf6", "icone": "fa-tire" },
+    { "id": 5, "nome": "Suspensão", "cor": "#f59e0b", "icone": "fa-car-crash" },
+    { "id": 6, "nome": "Bateria", "cor": "#06b6d4", "icone": "fa-car-battery" },
+    { "id": 7, "nome": "Ar Condicionado", "cor": "#14b8a6", "icone": "fa-snowflake" },
+    { "id": 8, "nome": "Motor", "cor": "#dc2626", "icone": "fa-engine" },
+    { "id": 9, "nome": "Transmissão", "cor": "#7c3aed", "icone": "fa-gears" },
+    { "id": 10, "nome": "Sistema Elétrico", "cor": "#eab308", "icone": "fa-bolt" },
+    { "id": 11, "nome": "Limpeza", "cor": "#22c55e", "icone": "fa-soap" },
+    { "id": 12, "nome": "Outros", "cor": "#64748b", "icone": "fa-wrench" }
+  ],
+  "dataBackup": "2026-02-02T12:00:00.000Z",
+  "versao": "2.0"
+}
