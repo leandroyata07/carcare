@@ -5,6 +5,7 @@ import path from 'path'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: '/carcare/',
   plugins: [
     react(),
     // TanStackRouterVite() // Desabilitado: usando router manual
