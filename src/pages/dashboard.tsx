@@ -1,4 +1,4 @@
-import { Car, Wrench, DollarSign, Calendar, Plus, BarChart3, TrendingUp, Activity } from 'lucide-react'
+import { Car, Wrench, DollarSign, Plus, BarChart3, TrendingUp, Activity } from 'lucide-react'
 import { useAuthStore } from '@/stores/auth-store'
 import { useVehicleStore } from '@/stores/vehicle-store'
 import { useCategoryStore } from '@/stores/category-store'

@@ -14,7 +14,6 @@ import { useToast } from '@/hooks/use-toast'
 import { exportBackup, importBackup } from '@/lib/utils'
 import { Download, Upload, Moon, Sun, Bell, Database, AlertTriangle, CheckCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
 export function SettingsPage() {
   const { currentUser, users } = useAuthStore()
@@ -54,6 +53,11 @@ export function SettingsPage() {
       }
 
       const data = res.data
+      if (!data) {
+        toast({ title: 'Erro ao restaurar backup', description: 'Dados inválidos', variant: 'destructive' })
+        return
+      }
+
       if (data.vehicles) {
         localStorage.setItem('carcare-vehicles', JSON.stringify({ state: { vehicles: data.vehicles, currentVehicleId: null } }))
       }
