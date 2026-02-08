@@ -154,6 +154,7 @@ const routeTree = rootRoute.addChildren([
 export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
+  basepath: '/carcare',
 })
 
 // Type declaration for router
