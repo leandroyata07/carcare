@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Imagem OG - CarCare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2563eb;
+        }
+        #canvas {
+            border: 2px solid #ddd;
+            display: block;
+            margin: 20px 0;
+        }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover {
+            background: #1e40af;
+        }
+        .instructions {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Gerador de Imagem para WhatsApp - CarCare</h1>
+        
+        <div class="instructions">
+            <strong>📋 Instruções:</strong>
+            <ol>
+                <li>Clique em <strong>"Baixar Imagem PNG"</strong></li>
+                <li>Salve como <strong>og-image.png</strong></li>
+                <li>Cole na pasta <strong>public/</strong> do projeto</li>
+                <li>Substitua o arquivo og-image.svg</li>
+            </ol>
+        </div>
+
+        <canvas id="canvas" width="1200" height="630"></canvas>
+        
+        <button onclick="downloadImage()">📥 Baixar Imagem PNG</button>
+        <button onclick="drawImage()">🔄 Redesenhar</button>
+    </div>
+
+    <script>
+        function drawImage() {
+            const canvas = document.getElementById('canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1e40af');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, 1200, 630);
+
+            // Car Icon (simplified)
+            ctx.strokeStyle = 'white';
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Car body
+            ctx.beginPath();
+            ctx.moveTo(450, 280);
+            ctx.lineTo(500, 240);
+            ctx.lineTo(700, 240);
+            ctx.lineTo(750, 280);
+            ctx.lineTo(750, 340);
+            ctx.lineTo(450, 340);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Windshield
+            ctx.beginPath();
+            ctx.moveTo(520, 240);
+            ctx.lineTo(540, 260);
+            ctx.lineTo(660, 260);
+            ctx.lineTo(680, 240);
+            ctx.stroke();
+
+            // Wheels
+            ctx.beginPath();
+            ctx.arc(500, 340, 30, 0, Math.PI * 2);
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(700, 340, 30, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Wheel centers
+            ctx.beginPath();
+            ctx.arc(500, 340, 12, 0, Math.PI * 2);
+            ctx.fillStyle = 'white';
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.arc(700, 340, 12, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Title
+            ctx.fillStyle = 'white';
+            ctx.font = 'bold 90px Arial, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('CarCare', 600, 440);
+
+            // Subtitle
+            ctx.font = '38px Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
+            ctx.fillText('Sistema de Controle de Manutenção Veicular', 600, 490);
+
+            // Bottom text
+            ctx.font = '28px Arial, sans-serif';
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+            ctx.fillText('Controle completo de veículos, manutenções e IPVA', 600, 560);
+        }
+
+        function downloadImage() {
+            const canvas = document.getElementById('canvas');
+            const link = document.createElement('a');
+            link.download = 'og-image.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Desenhar automaticamente ao carregar
+        window.onload = drawImage;
+    </script>
+</body>
+</html>
