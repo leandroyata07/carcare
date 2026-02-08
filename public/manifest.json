@@ -2,7 +2,8 @@
   "name": "CarCare - Sistema de Controle Veicular",
   "short_name": "CarCare",
   "description": "Sistema completo de controle de manutenção veicular",
-  "start_url": "/",
+  "start_url": "/carcare/",
+  "scope": "/carcare/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
@@ -28,7 +29,7 @@
       "name": "Veículos",
       "short_name": "Veículos",
       "description": "Gerenciar veículos",
-      "url": "/vehicles",
+      "url": "/carcare/vehicles",
       "icons": [
         {
           "src": "/icon-192.svg",
@@ -41,7 +42,7 @@
       "name": "Manutenções",
       "short_name": "Manutenções",
       "description": "Registrar manutenções",
-      "url": "/maintenances",
+      "url": "/carcare/maintenances",
       "icons": [
         {
           "src": "/icon-192.svg",
