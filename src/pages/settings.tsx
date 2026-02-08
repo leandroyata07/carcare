@@ -185,7 +185,7 @@ export function SettingsPage() {
                 <Input id="confirmPassword" type="password" {...pwForm.register('confirmPassword')} />
               </div>
 
-              <Button type="submit" className="w-full">Alterar senha</Button>
+              <Button type="submit">Alterar senha</Button>
             </form>
           </CardContent>
         </Card>
@@ -228,7 +228,7 @@ export function SettingsPage() {
             </p>
           </div>
 
-          <Button onClick={handleSaveSettings} className="w-full">
+          <Button onClick={handleSaveSettings}>
             Salvar Configurações
           </Button>
         </CardContent>

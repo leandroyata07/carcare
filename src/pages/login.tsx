@@ -140,7 +140,7 @@ export function LoginPage() {
 
               <Button 
                 type="submit" 
-                className="w-full h-11 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" 
+                className="w-full h-11 text-base font-semibold bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200" 
                 size="lg"
               >
                 Entrar
