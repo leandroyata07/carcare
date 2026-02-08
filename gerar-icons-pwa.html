@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerar Ícones PWA - CarCare</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        h1 { color: #2563eb; }
+        canvas { border: 2px solid #ddd; margin: 20px 0; }
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        button:hover { background: #1e40af; }
+        .instructions {
+            background: #fffbeb;
+            border-left: 4px solid #f59e0b;
+            padding: 15px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Gerador de Ícones PWA - CarCare</h1>
+        
+        <div class="instructions">
+            <strong>📋 Instruções:</strong>
+            <ol>
+                <li>Clique em <strong>"Baixar Ícone 192x192"</strong></li>
+                <li>Salve como <strong>icon-192.png</strong> na pasta <strong>public/</strong></li>
+                <li>Clique em <strong>"Baixar Ícone 512x512"</strong></li>
+                <li>Salve como <strong>icon-512.png</strong> na pasta <strong>public/</strong></li>
+            </ol>
+        </div>
+
+        <h3>Ícone 192x192</h3>
+        <canvas id="canvas192" width="192" height="192"></canvas>
+        <button onclick="downloadIcon(192)">📥 Baixar Ícone 192x192</button>
+
+        <h3>Ícone 512x512</h3>
+        <canvas id="canvas512" width="512" height="512"></canvas>
+        <button onclick="downloadIcon(512)">📥 Baixar Ícone 512x512</button>
+    </div>
+
+    <script>
+        function drawIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            const scale = size / 192; // escala baseada no tamanho
+
+            // Background azul
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2563eb');
+            gradient.addColorStop(1, '#1e40af');
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+
+            // Configurações do carro
+            ctx.strokeStyle = 'white';
+            ctx.fillStyle = 'white';
+            ctx.lineWidth = 6 * scale;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+
+            // Desenhar carro centralizado
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const carWidth = 80 * scale;
+            const carHeight = 50 * scale;
+
+            // Corpo do carro
+            ctx.beginPath();
+            ctx.moveTo(centerX - carWidth/2, centerY + carHeight/3);
+            ctx.lineTo(centerX - carWidth/3, centerY - carHeight/3);
+            ctx.lineTo(centerX + carWidth/3, centerY - carHeight/3);
+            ctx.lineTo(centerX + carWidth/2, centerY + carHeight/3);
+            ctx.closePath();
+            ctx.stroke();
+
+            // Janela
+            ctx.beginPath();
+            ctx.moveTo(centerX - carWidth/3.5, centerY - carHeight/3.5);
+            ctx.lineTo(centerX - carWidth/5, centerY - carHeight/8);
+            ctx.lineTo(centerX + carWidth/5, centerY - carHeight/8);
+            ctx.lineTo(centerX + carWidth/3.5, centerY - carHeight/3.5);
+            ctx.stroke();
+
+            // Rodas
+            const wheelRadius = 12 * scale;
+            const wheelY = centerY + carHeight/3;
+
+            // Roda esquerda
+            ctx.beginPath();
+            ctx.arc(centerX - carWidth/3, wheelY, wheelRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(centerX - carWidth/3, wheelY, wheelRadius/3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Roda direita
+            ctx.beginPath();
+            ctx.arc(centerX + carWidth/3, wheelY, wheelRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.arc(centerX + carWidth/3, wheelY, wheelRadius/3, 0, Math.PI * 2);
+            ctx.fill();
+        }
+
+        function downloadIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const link = document.createElement('a');
+            link.download = `icon-${size}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        // Desenhar ao carregar
+        window.onload = () => {
+            drawIcon(192);
+            drawIcon(512);
+        };
+    </script>
+</body>
+</html>

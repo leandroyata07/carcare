@@ -4,10 +4,10 @@ const DYNAMIC_CACHE = 'carcare-dynamic-v1.0.0';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
-  '/',
-  '/manifest.json',
-  '/icon-192.svg',
-  '/icon-512.svg'
+  '/carcare/',
+  '/carcare/manifest.json',
+  '/carcare/icon-192.png',
+  '/carcare/icon-512.png'
 ];
 
 // Install event - cache static assets
