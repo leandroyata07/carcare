@@ -10,7 +10,12 @@ import { Link } from '@tanstack/react-router'
 export function NotificationsPanel() {
   const { vehicles } = useVehicleStore()
   const { currentUser } = useAuthStore()
-  const { getUpcomingMaintenances, getOverdueMaintenances } = useMaintenanceStore()
+  const { 
+    getUpcomingMaintenances, 
+    getOverdueMaintenances,
+    getUpcomingMaintenancesByDate,
+    getOverdueMaintenancesByDate 
+  } = useMaintenanceStore()
   const { getUpcomingIPVAs, getOverdueIPVAs } = useIPVAStore()
   const { isRead } = useNotificationStore()
   
@@ -19,13 +24,30 @@ export function NotificationsPanel() {
   
   // Buscar notificações de todos os veículos
   const allVehicleNotifications = userVehicles.map(vehicle => {
-    const upcomingMaintenances = getUpcomingMaintenances(vehicle.id, vehicle.mileage, 500)
-    const overdueMaintenances = getOverdueMaintenances(vehicle.id, vehicle.mileage)
+    const upcomingMaintenancesByKm = getUpcomingMaintenances(vehicle.id, vehicle.mileage, 500)
+    const overdueMaintenancesByKm = getOverdueMaintenances(vehicle.id, vehicle.mileage)
+    const upcomingMaintenancesByDate = getUpcomingMaintenancesByDate(vehicle.id, 30)
+    const overdueMaintenancesByDate = getOverdueMaintenancesByDate(vehicle.id)
+    
+    // Combinar manutenções por km e por data (removendo duplicatas)
+    const allUpcoming = [...upcomingMaintenancesByKm]
+    upcomingMaintenancesByDate.forEach(m => {
+      if (!allUpcoming.find(existing => existing.id === m.id)) {
+        allUpcoming.push(m)
+      }
+    })
+    
+    const allOverdue = [...overdueMaintenancesByKm]
+    overdueMaintenancesByDate.forEach(m => {
+      if (!allOverdue.find(existing => existing.id === m.id)) {
+        allOverdue.push(m)
+      }
+    })
     
     return {
       vehicleId: vehicle.id,
-      overdueMaintenances,
-      upcomingMaintenances,
+      overdueMaintenances: allOverdue,
+      upcomingMaintenances: allUpcoming,
       overdueIPVAs: [] as any[],
       upcomingIPVAs: [] as any[],
     }

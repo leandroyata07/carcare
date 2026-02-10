@@ -12,6 +12,8 @@ interface MaintenanceState {
   getMaintenanceById: (id: string) => Maintenance | null
   getUpcomingMaintenances: (vehicleId: string, currentMileage: number, alertDistance: number) => Maintenance[]
   getOverdueMaintenances: (vehicleId: string, currentMileage: number) => Maintenance[]
+  getUpcomingMaintenancesByDate: (vehicleId: string, alertDays: number) => Maintenance[]
+  getOverdueMaintenancesByDate: (vehicleId: string) => Maintenance[]
 }
 
 export const useMaintenanceStore = create<MaintenanceState>()(
@@ -25,6 +27,7 @@ export const useMaintenanceStore = create<MaintenanceState>()(
           id: generateUUID(),
           ...data,
           nextChange: data.nextChange || undefined,
+          nextChangeDate: data.nextChangeDate || undefined,
           vehicleId,
           userId,
           createdAt: now,
@@ -45,6 +48,7 @@ export const useMaintenanceStore = create<MaintenanceState>()(
         const cleanData = {
           ...data,
           nextChange: data.nextChange === '' ? undefined : data.nextChange,
+          nextChangeDate: data.nextChangeDate === '' ? undefined : data.nextChangeDate,
         }
         
         set((state) => ({
@@ -91,6 +95,40 @@ export const useMaintenanceStore = create<MaintenanceState>()(
             m.nextChange < currentMileage
           )
           .sort((a, b) => (a.nextChange || 0) - (b.nextChange || 0))
+      },
+
+      getUpcomingMaintenancesByDate: (vehicleId: string, alertDays: number) => {
+        const today = new Date()
+        const alertDate = new Date()
+        alertDate.setDate(alertDate.getDate() + alertDays)
+        
+        return get()
+          .maintenances.filter((m) => {
+            if (m.vehicleId !== vehicleId || !m.nextChangeDate) return false
+            const nextDate = new Date(m.nextChangeDate)
+            return nextDate > today && nextDate <= alertDate
+          })
+          .sort((a, b) => {
+            const dateA = new Date(a.nextChangeDate!)
+            const dateB = new Date(b.nextChangeDate!)
+            return dateA.getTime() - dateB.getTime()
+          })
+      },
+
+      getOverdueMaintenancesByDate: (vehicleId: string) => {
+        const today = new Date()
+        
+        return get()
+          .maintenances.filter((m) => {
+            if (m.vehicleId !== vehicleId || !m.nextChangeDate) return false
+            const nextDate = new Date(m.nextChangeDate)
+            return nextDate < today
+          })
+          .sort((a, b) => {
+            const dateA = new Date(a.nextChangeDate!)
+            const dateB = new Date(b.nextChangeDate!)
+            return dateA.getTime() - dateB.getTime()
+          })
       },
     }),
     {

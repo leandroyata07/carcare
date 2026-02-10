@@ -24,7 +24,12 @@ interface VehicleNotification {
 export function NotificationsPage() {
   const { vehicles } = useVehicleStore()
   const { currentUser } = useAuthStore()
-  const { getUpcomingMaintenances, getOverdueMaintenances } = useMaintenanceStore()
+  const { 
+    getUpcomingMaintenances, 
+    getOverdueMaintenances,
+    getUpcomingMaintenancesByDate,
+    getOverdueMaintenancesByDate 
+  } = useMaintenanceStore()
   const { getUpcomingIPVAs, getOverdueIPVAs } = useIPVAStore()
   const { markAllAsRead, isRead, clearOldNotifications } = useNotificationStore()
   
@@ -37,16 +42,33 @@ export function NotificationsPage() {
   
   // Buscar notificações de todos os veículos
   const allVehicleNotifications: VehicleNotification[] = userVehicles.map(vehicle => {
-    const upcomingMaintenances = getUpcomingMaintenances(vehicle.id, vehicle.mileage, 500)
-    const overdueMaintenances = getOverdueMaintenances(vehicle.id, vehicle.mileage)
+    const upcomingMaintenancesByKm = getUpcomingMaintenances(vehicle.id, vehicle.mileage, 500)
+    const overdueMaintenancesByKm = getOverdueMaintenances(vehicle.id, vehicle.mileage)
+    const upcomingMaintenancesByDate = getUpcomingMaintenancesByDate(vehicle.id, 30)
+    const overdueMaintenancesByDate = getOverdueMaintenancesByDate(vehicle.id)
+    
+    // Combinar manutenções por km e por data (removendo duplicatas)
+    const allUpcoming = [...upcomingMaintenancesByKm]
+    upcomingMaintenancesByDate.forEach(m => {
+      if (!allUpcoming.find(existing => existing.id === m.id)) {
+        allUpcoming.push(m)
+      }
+    })
+    
+    const allOverdue = [...overdueMaintenancesByKm]
+    overdueMaintenancesByDate.forEach(m => {
+      if (!allOverdue.find(existing => existing.id === m.id)) {
+        allOverdue.push(m)
+      }
+    })
     
     return {
       vehicleId: vehicle.id,
       vehicleBrand: vehicle.brand,
       vehicleModel: vehicle.model,
       vehiclePlate: vehicle.plate,
-      overdueMaintenances,
-      upcomingMaintenances,
+      overdueMaintenances: allOverdue,
+      upcomingMaintenances: allUpcoming,
       overdueIPVAs: [],
       upcomingIPVAs: [],
     }
@@ -252,12 +274,21 @@ export function NotificationsPage() {
                             <div className="flex items-start justify-between">
                               <div className="space-y-1">
                                 <div className="font-semibold text-red-700 dark:text-red-400">{m.type}</div>
-                                <div className="text-sm text-muted-foreground">
-                                  Deveria ser feita em {formatMileage(m.nextChange || 0)}
-                                </div>
-                                <div className="text-sm font-medium text-red-600">
-                                  Atrasado em {formatMileage((vehicle.mileage - (m.nextChange || 0)))}
-                                </div>
+                                {m.nextChange && (
+                                  <>
+                                    <div className="text-sm text-muted-foreground">
+                                      Deveria ser feita em {formatMileage(m.nextChange || 0)}
+                                    </div>
+                                    <div className="text-sm font-medium text-red-600">
+                                      Atrasado em {formatMileage((vehicle.mileage - (m.nextChange || 0)))}
+                                    </div>
+                                  </>
+                                )}
+                                {m.nextChangeDate && (
+                                  <div className="text-sm font-medium text-red-600">
+                                    Deveria ser feita em {formatDate(m.nextChangeDate)}
+                                  </div>
+                                )}
                               </div>
                               {isRead(m.id) && (
                                 <Badge variant="secondary" className="text-xs">
@@ -289,12 +320,21 @@ export function NotificationsPage() {
                             <div className="flex items-start justify-between">
                               <div className="space-y-1">
                                 <div className="font-semibold text-yellow-700 dark:text-yellow-400">{m.type}</div>
-                                <div className="text-sm text-muted-foreground">
-                                  Próxima em {formatMileage(m.nextChange || 0)}
-                                </div>
-                                <div className="text-sm font-medium text-yellow-600">
-                                  Faltam {formatMileage((m.nextChange || 0) - vehicle.mileage)}
-                                </div>
+                                {m.nextChange && (
+                                  <>
+                                    <div className="text-sm text-muted-foreground">
+                                      Próxima em {formatMileage(m.nextChange || 0)}
+                                    </div>
+                                    <div className="text-sm font-medium text-yellow-600">
+                                      Faltam {formatMileage((m.nextChange || 0) - vehicle.mileage)}
+                                    </div>
+                                  </>
+                                )}
+                                {m.nextChangeDate && (
+                                  <div className="text-sm font-medium text-yellow-600">
+                                    Próxima em {formatDate(m.nextChangeDate)}
+                                  </div>
+                                )}
                               </div>
                               {isRead(m.id) && (
                                 <Badge variant="secondary" className="text-xs">

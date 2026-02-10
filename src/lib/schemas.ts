@@ -145,6 +145,7 @@ export const maintenanceSchema = z.object({
   location: z.string().min(2, 'Local deve ter no mínimo 2 caracteres'),
   value: z.number().min(0, 'Valor não pode ser negativo'),
   nextChange: z.number().min(0, 'Próxima troca não pode ser negativa').optional(),
+  nextChangeDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida (formato: YYYY-MM-DD)').optional(),
   photo: z.string().optional(), // base64
   userId: z.string().uuid(),
   createdAt: z.string().datetime(),
@@ -160,6 +161,7 @@ export const maintenanceFormSchema = z.object({
   location: z.string().min(2, 'Local deve ter no mínimo 2 caracteres'),
   value: z.number().min(0, 'Valor não pode ser negativo'),
   nextChange: z.number().min(0, 'Próxima troca não pode ser negativa').optional().or(z.literal('')),
+  nextChangeDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida (formato: YYYY-MM-DD)').optional().or(z.literal('')),
   photo: z.string().optional(),
 })
 
