@@ -285,7 +285,7 @@ export function VehiclesPage() {
               Gerencie todos os seus veículos em um só lugar
             </p>
           </div>
-          <Badge variant="info" className="text-lg px-4 py-2">
+          <Badge variant="info" className="text-lg px-4 py-2 whitespace-nowrap">
             {userVehicles.length} {userVehicles.length === 1 ? 'veículo' : 'veículos'}
           </Badge>
         </div>

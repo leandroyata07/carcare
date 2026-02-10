@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v2.1.0'; // AUMENTE ESTE NÚMERO A CADA ATUALIZAÇÃO
+const CACHE_VERSION = 'v2.2.0'; // AUMENTE ESTE NÚMERO A CADA ATUALIZAÇÃO
 const CACHE_NAME = `carcare-${CACHE_VERSION}`;
 const STATIC_CACHE = `carcare-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `carcare-dynamic-${CACHE_VERSION}`;
@@ -50,16 +50,19 @@ self.addEventListener('activate', (event) => {
         );
       })
       .then(() => {
-        console.log('[ServiceWorker] Claiming clients');
+        console.log('[ServiceWorker] Claiming clients immediately');
         return self.clients.claim();
       })
       .then(() => {
-        // Notifica todos os clientes para recarregar
-        return self.clients.matchAll().then(clients => {
+        // Força reload em todos os clientes abertos
+        console.log('[ServiceWorker] Forcing reload on all clients');
+        return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
           clients.forEach(client => {
+            console.log('[ServiceWorker] Sending FORCE_RELOAD to client');
             client.postMessage({
-              type: 'SW_UPDATED',
-              version: CACHE_VERSION
+              type: 'FORCE_RELOAD',
+              version: CACHE_VERSION,
+              reason: 'sw_updated'
             });
           });
         });

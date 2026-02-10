@@ -375,7 +375,7 @@ export function HelpPage() {
                         <Info className="h-5 w-5 text-blue-500" />
                         {item.subtitle}
                       </h3>
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
                         {item.description}
                       </p>
 

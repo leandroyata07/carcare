@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
+import { checkForUpdates, setLocalVersion, forceUpdate } from '@/lib/version-checker'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -36,7 +37,31 @@ export function LoginPage() {
     },
   })
 
-  const onSubmit = (data: LoginForm) => {
+  const onSubmit = async (data: LoginForm) => {
+    // VERIFICA VERSÃO ANTES DO LOGIN
+    const versionCheck = await checkForUpdates()
+    
+    if (versionCheck.hasUpdate && versionCheck.serverVersion) {
+      console.log('[Login] Nova versão detectada, forçando atualização...')
+      
+      // Mostra toast de atualização
+      toast({
+        title: '🔄 Atualizando sistema...',
+        description: `Carregando versão ${versionCheck.serverVersion}`,
+      })
+
+      // Salva a nova versão
+      setLocalVersion(versionCheck.serverVersion)
+
+      // Aguarda um pouco para o usuário ver a mensagem
+      setTimeout(() => {
+        forceUpdate()
+      }, 1500)
+      
+      return
+    }
+
+    // PROSSEGUE COM LOGIN NORMAL
     const success = login(data.username, data.password)
 
     if (success) {

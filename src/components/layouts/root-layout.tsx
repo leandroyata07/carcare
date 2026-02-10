@@ -10,6 +10,7 @@ import { PWAInstallPrompt } from '@/components/ui/pwa-install-prompt'
 import { PWAUpdatePrompt } from '@/components/pwa-update-prompt'
 import { SessionManager } from '@/components/session-manager'
 import { useToast } from '@/hooks/use-toast'
+import { initVersionListener, getLocalVersion, fetchServerVersion } from '@/lib/version-checker'
 
 export function RootLayout() {
   const { settings } = useSettingsStore()
@@ -20,11 +21,51 @@ export function RootLayout() {
   const { toast } = useToast()
 
   const notifiedRef = useRef<Set<string>>(new Set())
+  const versionNotifiedRef = useRef(false)
 
   useEffect(() => {
     // Initialize default admin user if no users exist
     initializeDefaultUser()
   }, [initializeDefaultUser])
+
+  // Inicializa o listener de versão (FORÇA RELOAD QUANDO SW ATUALIZA)
+  useEffect(() => {
+    initVersionListener()
+    console.log('[RootLayout] Version listener initialized')
+  }, [])
+
+  // Verifica se o sistema foi recém atualizado e mostra notificação
+  useEffect(() => {
+    if (versionNotifiedRef.current) return
+    if (!currentUser) return
+
+    const checkVersion = async () => {
+      const localVersion = getLocalVersion()
+      if (!localVersion) {
+        // Primeira vez, salva a versão atual
+        const serverVersionInfo = await fetchServerVersion()
+        if (serverVersionInfo) {
+          localStorage.setItem('carcare-app-version', serverVersionInfo.version)
+        }
+        return
+      }
+
+      // Verifica se acabou de atualizar (flag temporária)
+      const justUpdated = sessionStorage.getItem('carcare-just-updated')
+      if (justUpdated === 'true') {
+        versionNotifiedRef.current = true
+        sessionStorage.removeItem('carcare-just-updated')
+        
+        toast({
+          title: '✨ Sistema Atualizado!',
+          description: `Você está usando a versão ${localVersion}`,
+          duration: 5000,
+        })
+      }
+    }
+
+    checkVersion()
+  }, [currentUser, toast])
 
   useEffect(() => {
     // Apply dark mode class to document

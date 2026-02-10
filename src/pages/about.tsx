@@ -69,12 +69,12 @@ export function AboutPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
             O <strong>CarCare</strong> é um sistema completo e moderno para controle de manutenção veicular. 
             Desenvolvido com as mais recentes tecnologias web, oferece uma experiência fluida e intuitiva 
             para gerenciar todos os aspectos relacionados aos seus veículos.
           </p>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
             Com o CarCare você pode cadastrar múltiplos veículos, registrar histórico completo de manutenções, 
             controlar pagamentos de IPVA e licenciamento, organizar serviços por categorias personalizadas, 
             acompanhar gastos e estatísticas, receber alertas de manutenções próximas e muito mais!
