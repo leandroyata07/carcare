@@ -9,7 +9,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './dropdown-menu'
@@ -17,7 +16,7 @@ import {
 // Tipo para agrupar notificações por veículo
 interface VehicleNotification {
   vehicleId: string
-  vehicleName: string
+  vehicleBrand: string
   vehicleModel: string
   vehiclePlate: string
   overdueMaintenances: any[]
@@ -28,12 +27,12 @@ interface VehicleNotification {
 
 export function NotificationsPanel() {
   const { vehicles } = useVehicleStore()
-  const { user } = useAuthStore()
+  const { currentUser } = useAuthStore()
   const { getUpcomingMaintenances, getOverdueMaintenances } = useMaintenanceStore()
   const { getUpcomingIPVAs, getOverdueIPVAs } = useIPVAStore()
   
   // Pegar apenas veículos do usuário atual
-  const userVehicles = user ? vehicles.filter(v => v.userId === user.id) : []
+  const userVehicles = currentUser ? vehicles.filter(v => v.userId === currentUser.id) : []
   
   // Buscar notificações de todos os veículos
   const allVehicleNotifications: VehicleNotification[] = userVehicles.map(vehicle => {
@@ -42,8 +41,8 @@ export function NotificationsPanel() {
     
     return {
       vehicleId: vehicle.id,
-      vehicleName: vehicle.name,
-      vehicleModel: `${vehicle.brand} ${vehicle.model}`,
+      vehicleBrand: vehicle.brand,
+      vehicleModel: vehicle.model,
       vehiclePlate: vehicle.plate,
       overdueMaintenances,
       upcomingMaintenances,
@@ -136,9 +135,9 @@ export function NotificationsPanel() {
                   <div className="px-4 py-3 bg-muted/30">
                     <div className="flex items-center justify-between">
                       <div>
-                        <div className="font-semibold text-sm">{vehicleNotif.vehicleName}</div>
+                        <div className="font-semibold text-sm">{vehicleNotif.vehicleBrand} {vehicleNotif.vehicleModel}</div>
                         <div className="text-xs text-muted-foreground">
-                          {vehicleNotif.vehicleModel} • {vehicleNotif.vehiclePlate}
+                          {vehicleNotif.vehiclePlate}
                         </div>
                       </div>
                       <div className="bg-red-500 text-white text-xs rounded-full h-6 w-6 flex items-center justify-center font-medium">
