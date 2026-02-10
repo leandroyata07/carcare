@@ -57,12 +57,6 @@ export function NotificationsPanel() {
     v.overdueIPVAs.length > 0 ||
     v.upcomingIPVAs.length > 0
   )
-  
-  // Calcular total de notificações
-  const totalNotifications = vehiclesWithNotifications.reduce((acc, v) => 
-    acc + v.overdueMaintenances.length + v.upcomingMaintenances.length + 
-    v.overdueIPVAs.length + v.upcomingIPVAs.length, 0
-  )
 
   // Coletar todos os IDs de notificações
   const allNotificationIds = vehiclesWithNotifications.flatMap(v => [
