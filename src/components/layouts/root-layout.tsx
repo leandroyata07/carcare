@@ -7,6 +7,8 @@ import { useMaintenanceStore } from '@/stores/maintenance-store'
 import { useIPVAStore } from '@/stores/ipva-store'
 import { Toaster } from '@/components/ui/toaster'
 import { PWAInstallPrompt } from '@/components/ui/pwa-install-prompt'
+import { PWAUpdatePrompt } from '@/components/pwa-update-prompt'
+import { SessionManager } from '@/components/session-manager'
 import { useToast } from '@/hooks/use-toast'
 
 export function RootLayout() {
@@ -75,9 +77,11 @@ export function RootLayout() {
 
   return (
     <>
+      <SessionManager />
       <Outlet />
       <Toaster />
       <PWAInstallPrompt />
+      <PWAUpdatePrompt />
     </>
   )
 }
