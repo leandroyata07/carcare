@@ -13,6 +13,7 @@ import { SettingsPage } from '@/pages/settings'
 import { HelpPage } from '@/pages/help'
 import { AboutPage } from '@/pages/about'
 import { ReportsPage } from '@/pages/reports'
+import { NotificationsPage } from '@/pages/notifications'
 import { useAuthStore } from '@/stores/auth-store'
 
 // Root route
@@ -133,6 +134,12 @@ const reportsRoute = createRoute({
   component: ReportsPage,
 })
 
+const notificationsRoute = createRoute({
+  getParentRoute: () => dashboardLayoutRoute,
+  path: '/notifications',
+  component: NotificationsPage,
+})
+
 // Build route tree
 const routeTree = rootRoute.addChildren([
   authLayoutRoute.addChildren([loginRoute]),
@@ -145,6 +152,7 @@ const routeTree = rootRoute.addChildren([
     usersRoute,
     settingsRoute,
     reportsRoute,
+    notificationsRoute,
     helpRoute,
     aboutRoute,
   ]),
