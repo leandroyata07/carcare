@@ -1,5 +1,5 @@
 {
-  "version": "2.2.7",
-  "buildDate": "2026-02-11T15:15:00.000Z",
-  "description": "Correção: tipos TypeScript no vehicle store"
+  "version": "2.2.8",
+  "buildDate": "2026-02-11T15:30:00.000Z",
+  "description": "Campo Data de Leitura agora é opcional - limpar cache"
 }
