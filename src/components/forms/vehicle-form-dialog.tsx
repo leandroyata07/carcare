@@ -61,6 +61,7 @@ export function VehicleFormDialog({
       year: new Date().getFullYear(),
       plate: '',
       mileage: 0,
+      mileageDate: new Date().toISOString().split('T')[0],
       photo: undefined,
     },
   })
@@ -303,7 +304,7 @@ export function VehicleFormDialog({
                 name="mileage"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quilometragem Atual</FormLabel>
+                    <FormLabel>Quilometragem Atual (km) *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -314,6 +315,27 @@ export function VehicleFormDialog({
                     </FormControl>
                     <FormDescription>
                       Quilometragem atual do veículo
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              {/* Mileage Date */}
+              <FormField
+                control={form.control}
+                name="mileageDate"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Data da Leitura *</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="date"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Data em que a quilometragem foi registrada
                     </FormDescription>
                     <FormMessage />
                   </FormItem>

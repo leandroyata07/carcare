@@ -12,7 +12,7 @@ interface VehicleState {
   setCurrentVehicle: (id: string) => void
   getCurrentVehicle: () => Vehicle | null
   getUserVehicles: (userId: string) => Vehicle[]
-  updateMileage: (id: string, mileage: number) => void
+  updateMileage: (id: string, mileage: number, mileageDate: string) => void
 }
 
 export const useVehicleStore = create<VehicleState>()(
@@ -102,13 +102,13 @@ export const useVehicleStore = create<VehicleState>()(
         return get().vehicles.filter((v) => v.userId === userId)
       },
 
-      updateMileage: (id: string, mileage: number) => {
+      updateMileage: (id: string, mileage: number, mileageDate: string) => {
         const now = new Date().toISOString()
         
         set((state) => ({
           vehicles: state.vehicles.map((vehicle) =>
             vehicle.id === id
-              ? { ...vehicle, mileage, updatedAt: now }
+              ? { ...vehicle, mileage, mileageDate, updatedAt: now }
               : vehicle
           ),
         }))
