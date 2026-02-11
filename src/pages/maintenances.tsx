@@ -96,7 +96,7 @@ export function MaintenancesPage() {
         
         // Atualiza a quilometragem do veículo se for maior
         if (data.mileage > currentVehicle.mileage) {
-          updateMileage(currentVehicle.id, data.mileage)
+          updateMileage(currentVehicle.id, data.mileage, data.date)
         }
         
         toast({
