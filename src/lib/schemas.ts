@@ -93,7 +93,7 @@ export const vehicleFormSchema = z.object({
     .regex(/^[A-Z]{3}-\d{4}$|^[A-Z]{3}\d[A-Z]\d{2}$/, 'Placa inválida (ABC-1234 ou ABC1D23)'),
   color: z.string().optional().or(z.literal('')),
   mileage: z.number().min(0, 'Quilometragem não pode ser negativa'),
-  mileageDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  mileageDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data da leitura é obrigatória'),
   fuelType: z.enum(['Gasoline', 'Ethanol', 'Diesel', 'Flex', 'Electric', 'Hybrid']).default('Gasoline'),
   chassisNumber: z.string().optional().or(z.literal('')),
   renavam: z.string().optional().or(z.literal('')),

@@ -142,6 +142,16 @@ export function VehicleFormDialog({
     }
   }
 
+  const onError = (errors: any) => {
+    console.error('Form validation errors:', errors)
+    const firstError = Object.values(errors)[0] as any
+    toast({
+      variant: 'destructive',
+      title: 'Erro no formulário',
+      description: firstError?.message || 'Verifique os campos obrigatórios',
+    })
+  }
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -158,7 +168,7 @@ export function VehicleFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
             {/* Photo Upload */}
             <div className="space-y-2">
               <Label>Foto do Veículo (opcional)</Label>

@@ -1,5 +1,5 @@
 {
-  "version": "2.2.3",
-  "buildDate": "2026-02-11T13:00:00.000Z",
-  "description": "Correção: campo Data de Leitura agora visível em todos os formulários"
+  "version": "2.2.4",
+  "buildDate": "2026-02-11T14:00:00.000Z",
+  "description": "Correção: validação do formulário com mensagens de erro claras"
 }
