@@ -26,6 +26,7 @@ export const useVehicleStore = create<VehicleState>()(
         
         const cleanData = {
           ...data,
+          mileageDate: data.mileageDate || new Date().toISOString().split('T')[0],
         }
         
         const newVehicle: Vehicle = {

@@ -263,7 +263,7 @@ export function AboutPage() {
 
       {/* Footer */}
       <div className="text-center text-sm text-gray-600 dark:text-gray-400 py-4">
-        <p>CarCare v2.2.8 - © 2026 Leandro Yata</p>
+        <p>CarCare v2.2.9 - © 2026 Leandro Yata</p>
         <p className="mt-1">Todos os direitos reservados</p>
       </div>
     </div>
