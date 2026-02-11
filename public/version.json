@@ -1,5 +1,5 @@
 {
-  "version": "2.2.4",
-  "buildDate": "2026-02-11T14:00:00.000Z",
-  "description": "Correção: validação do formulário com mensagens de erro claras"
+  "version": "2.2.5",
+  "buildDate": "2026-02-11T14:30:00.000Z",
+  "description": "Debug: logs para identificar problema de salvamento"
 }

@@ -57,6 +57,17 @@ export function VehicleFormDialog({
     defaultValues: editingVehicle ? {
       ...editingVehicle,
       mileageDate: editingVehicle.mileageDate || new Date().toISOString().split('T')[0],
+      color: editingVehicle.color || '',
+      fuelType: editingVehicle.fuelType || 'Gasoline',
+      chassisNumber: editingVehicle.chassisNumber || '',
+      renavam: editingVehicle.renavam || '',
+      engineNumber: editingVehicle.engineNumber || '',
+      purchaseDate: editingVehicle.purchaseDate || '',
+      purchaseValue: editingVehicle.purchaseValue || undefined,
+      insuranceCompany: editingVehicle.insuranceCompany || '',
+      insurancePolicy: editingVehicle.insurancePolicy || '',
+      insuranceExpiry: editingVehicle.insuranceExpiry || '',
+      notes: editingVehicle.notes || '',
     } : {
       type: 'car',
       brand: '',
@@ -65,6 +76,17 @@ export function VehicleFormDialog({
       plate: '',
       mileage: 0,
       mileageDate: new Date().toISOString().split('T')[0],
+      color: '',
+      fuelType: 'Gasoline',
+      chassisNumber: '',
+      renavam: '',
+      engineNumber: '',
+      purchaseDate: '',
+      purchaseValue: undefined,
+      insuranceCompany: '',
+      insurancePolicy: '',
+      insuranceExpiry: '',
+      notes: '',
       photo: undefined,
     },
   })
@@ -113,16 +135,30 @@ export function VehicleFormDialog({
   }
 
   const onSubmit = (data: VehicleForm) => {
-    if (!currentUser) return
+    console.log('=== FORM SUBMIT CALLED ===')
+    console.log('Form Data:', data)
+    console.log('Current User:', currentUser)
+    
+    if (!currentUser) {
+      console.error('No current user found!')
+      toast({
+        variant: 'destructive',
+        title: 'Erro de autenticação',
+        description: 'Usuário não encontrado. Faça login novamente.',
+      })
+      return
+    }
 
     try {
       if (editingVehicle) {
+        console.log('Updating vehicle:', editingVehicle.id)
         updateVehicle(editingVehicle.id, data)
         toast({
           title: 'Veículo atualizado!',
           description: 'As alterações foram salvas com sucesso',
         })
       } else {
+        console.log('Adding new vehicle for user:', currentUser.id)
         addVehicle(data, currentUser.id)
         toast({
           title: 'Veículo cadastrado!',
@@ -133,7 +169,9 @@ export function VehicleFormDialog({
       form.reset()
       setPhotoPreview(undefined)
       onOpenChange(false)
+      console.log('=== FORM SUBMIT SUCCESS ===')
     } catch (error) {
+      console.error('=== FORM SUBMIT ERROR ===', error)
       toast({
         variant: 'destructive',
         title: 'Erro ao salvar',
@@ -143,7 +181,9 @@ export function VehicleFormDialog({
   }
 
   const onError = (errors: any) => {
-    console.error('Form validation errors:', errors)
+    console.error('=== FORM VALIDATION ERRORS ===')
+    console.error('Errors:', errors)
+    console.error('Form Values:', form.getValues())
     const firstError = Object.values(errors)[0] as any
     toast({
       variant: 'destructive',
@@ -364,7 +404,11 @@ export function VehicleFormDialog({
               >
                 Cancelar
               </Button>
-              <Button type="submit" disabled={form.formState.isSubmitting}>
+              <Button 
+                type="submit" 
+                disabled={form.formState.isSubmitting}
+                onClick={() => console.log('Submit button clicked! Form state:', form.formState)}
+              >
                 {form.formState.isSubmitting
                   ? 'Salvando...'
                   : editingVehicle
