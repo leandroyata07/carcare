@@ -145,17 +145,23 @@ export function VehicleFormDialog({
       return
     }
 
+    // Ensure mileageDate is always set
+    const vehicleData = {
+      ...data,
+      mileageDate: data.mileageDate || new Date().toISOString().split('T')[0],
+    }
+
     try {
       if (editingVehicle) {
         console.log('Updating vehicle:', editingVehicle.id)
-        updateVehicle(editingVehicle.id, data)
+        updateVehicle(editingVehicle.id, vehicleData)
         toast({
           title: 'Veículo atualizado!',
           description: 'As alterações foram salvas com sucesso',
         })
       } else {
         console.log('Adding new vehicle for user:', currentUser.id)
-        addVehicle(data, currentUser.id)
+        addVehicle(vehicleData, currentUser.id)
         toast({
           title: 'Veículo cadastrado!',
           description: 'Seu veículo foi adicionado com sucesso',
@@ -370,26 +376,7 @@ export function VehicleFormDialog({
                 )}
               />
 
-              {/* Mileage Date */}
-              <FormField
-                control={form.control}
-                name="mileageDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Data da Leitura *</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="date"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Data em que a quilometragem foi registrada
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+              {/* Mileage Date - Hidden temporarily, auto-filled with today's date */}
             </div>
 
             <DialogFooter>
