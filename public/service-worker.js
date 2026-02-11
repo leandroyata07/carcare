@@ -1,4 +1,4 @@
-const CACHE_VERSION = 'v2.2.5'; // AUMENTE ESTE NÚMERO A CADA ATUALIZAÇÃO
+const CACHE_VERSION = 'v2.2.6'; // AUMENTE ESTE NÚMERO A CADA ATUALIZAÇÃO
 const CACHE_NAME = `carcare-${CACHE_VERSION}`;
 const STATIC_CACHE = `carcare-static-${CACHE_VERSION}`;
 const DYNAMIC_CACHE = `carcare-dynamic-${CACHE_VERSION}`;
