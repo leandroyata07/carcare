@@ -1,5 +1,5 @@
 {
-  "version": "2.2.2",
-  "buildDate": "2026-02-11T12:00:00.000Z",
-  "description": "Campo de data adicionado à quilometragem"
+  "version": "2.2.3",
+  "buildDate": "2026-02-11T13:00:00.000Z",
+  "description": "Correção: campo Data de Leitura agora visível em todos os formulários"
 }

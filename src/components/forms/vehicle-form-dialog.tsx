@@ -54,7 +54,10 @@ export function VehicleFormDialog({
 
   const form = useForm<VehicleForm>({
     resolver: zodResolver(vehicleFormSchema),
-    defaultValues: editingVehicle || {
+    defaultValues: editingVehicle ? {
+      ...editingVehicle,
+      mileageDate: editingVehicle.mileageDate || new Date().toISOString().split('T')[0],
+    } : {
       type: 'car',
       brand: '',
       model: '',
