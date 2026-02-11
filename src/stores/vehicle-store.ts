@@ -24,19 +24,8 @@ export const useVehicleStore = create<VehicleState>()(
       addVehicle: (data: VehicleForm, userId: string) => {
         const now = new Date().toISOString()
         
-        // Convert empty strings to undefined for optional fields
         const cleanData = {
           ...data,
-          color: data.color === '' ? undefined : data.color,
-          chassisNumber: data.chassisNumber === '' ? undefined : data.chassisNumber,
-          renavam: data.renavam === '' ? undefined : data.renavam,
-          engineNumber: data.engineNumber === '' ? undefined : data.engineNumber,
-          purchaseDate: data.purchaseDate === '' ? undefined : data.purchaseDate,
-          purchaseValue: data.purchaseValue === '' ? undefined : data.purchaseValue as number | undefined,
-          insuranceCompany: data.insuranceCompany === '' ? undefined : data.insuranceCompany,
-          insurancePolicy: data.insurancePolicy === '' ? undefined : data.insurancePolicy,
-          insuranceExpiry: data.insuranceExpiry === '' ? undefined : data.insuranceExpiry,
-          notes: data.notes === '' ? undefined : data.notes,
         }
         
         const newVehicle: Vehicle = {
@@ -58,19 +47,8 @@ export const useVehicleStore = create<VehicleState>()(
       updateVehicle: (id: string, data: Partial<VehicleForm>) => {
         const now = new Date().toISOString()
         
-        // Convert empty strings to undefined for optional fields
         const cleanData = {
           ...data,
-          color: data.color === '' ? undefined : data.color,
-          chassisNumber: data.chassisNumber === '' ? undefined : data.chassisNumber,
-          renavam: data.renavam === '' ? undefined : data.renavam,
-          engineNumber: data.engineNumber === '' ? undefined : data.engineNumber,
-          purchaseDate: data.purchaseDate === '' ? undefined : data.purchaseDate,
-          purchaseValue: data.purchaseValue === '' ? undefined : data.purchaseValue as number | undefined,
-          insuranceCompany: data.insuranceCompany === '' ? undefined : data.insuranceCompany,
-          insurancePolicy: data.insurancePolicy === '' ? undefined : data.insurancePolicy,
-          insuranceExpiry: data.insuranceExpiry === '' ? undefined : data.insuranceExpiry,
-          notes: data.notes === '' ? undefined : data.notes,
         }
         
         set((state) => ({
