@@ -66,19 +66,21 @@ export function LoginPage() {
 
     if (success) {
       const usr = useAuthStore.getState().currentUser
+      
+      // Mostra recomendação de trocar senha se necessário
       if (usr?.mustChangePassword) {
         toast({
           title: 'Trocar senha',
-          description: 'É obrigatório alterar a senha padrão antes de continuar',
+          description: 'É recomendado alterar a senha padrão.',
         })
-        navigate({ to: '/settings' })
-        return
       }
 
       toast({
         title: 'Login realizado!',
         description: 'Bem-vindo ao CarCare',
       })
+      
+      // Sempre vai para o dashboard
       navigate({ to: '/' })
     } else {
       toast({
