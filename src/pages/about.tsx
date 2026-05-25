@@ -69,12 +69,12 @@ export function AboutPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
             O <strong>CarCare</strong> é um sistema completo e moderno para controle de manutenção veicular. 
             Desenvolvido com as mais recentes tecnologias web, oferece uma experiência fluida e intuitiva 
             para gerenciar todos os aspectos relacionados aos seus veículos.
           </p>
-          <p className="text-gray-700 dark:text-gray-300 leading-relaxed text-justify">
+          <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
             Com o CarCare você pode cadastrar múltiplos veículos, registrar histórico completo de manutenções, 
             controlar pagamentos de IPVA e licenciamento, organizar serviços por categorias personalizadas, 
             acompanhar gastos e estatísticas, receber alertas de manutenções próximas e muito mais!
@@ -263,7 +263,7 @@ export function AboutPage() {
 
       {/* Footer */}
       <div className="text-center text-sm text-gray-600 dark:text-gray-400 py-4">
-        <p>CarCare v2.3.0 - © 2026 Leandro Yata</p>
+        <p>CarCare v1.0.0 - © 2026 Leandro Yata</p>
         <p className="mt-1">Todos os direitos reservados</p>
       </div>
     </div>

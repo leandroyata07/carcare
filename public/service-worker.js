@@ -1,19 +1,18 @@
-const CACHE_VERSION = 'v2.3.0'; // AUMENTE ESTE NÚMERO A CADA ATUALIZAÇÃO
-const CACHE_NAME = `carcare-${CACHE_VERSION}`;
-const STATIC_CACHE = `carcare-static-${CACHE_VERSION}`;
-const DYNAMIC_CACHE = `carcare-dynamic-${CACHE_VERSION}`;
+const CACHE_NAME = 'carcare-v1.0.0';
+const STATIC_CACHE = 'carcare-static-v1.0.0';
+const DYNAMIC_CACHE = 'carcare-dynamic-v1.0.0';
 
 // Assets to cache on install
 const STATIC_ASSETS = [
-  '/carcare/',
-  '/carcare/manifest.json',
-  '/carcare/icon-192.png',
-  '/carcare/icon-512.png'
+  './',
+  './manifest.json',
+  './icon-192.svg',
+  './icon-512.svg'
 ];
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
-  console.log('[ServiceWorker] Installing version:', CACHE_VERSION);
+  console.log('[ServiceWorker] Installing...');
   
   event.waitUntil(
     caches.open(STATIC_CACHE)
@@ -21,16 +20,13 @@ self.addEventListener('install', (event) => {
         console.log('[ServiceWorker] Caching static assets');
         return cache.addAll(STATIC_ASSETS);
       })
-      .then(() => {
-        console.log('[ServiceWorker] Skip waiting - force activation');
-        return self.skipWaiting();
-      })
+      .then(() => self.skipWaiting())
   );
 });
 
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
-  console.log('[ServiceWorker] Activating version:', CACHE_VERSION);
+  console.log('[ServiceWorker] Activating...');
   
   event.waitUntil(
     caches.keys()
@@ -38,7 +34,6 @@ self.addEventListener('activate', (event) => {
         return Promise.all(
           cacheNames
             .filter((cacheName) => {
-              // Remove all old carcare caches
               return cacheName.startsWith('carcare-') && 
                      cacheName !== STATIC_CACHE && 
                      cacheName !== DYNAMIC_CACHE;
@@ -49,28 +44,11 @@ self.addEventListener('activate', (event) => {
             })
         );
       })
-      .then(() => {
-        console.log('[ServiceWorker] Claiming clients immediately');
-        return self.clients.claim();
-      })
-      .then(() => {
-        // Força reload em todos os clientes abertos
-        console.log('[ServiceWorker] Forcing reload on all clients');
-        return self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then(clients => {
-          clients.forEach(client => {
-            console.log('[ServiceWorker] Sending FORCE_RELOAD to client');
-            client.postMessage({
-              type: 'FORCE_RELOAD',
-              version: CACHE_VERSION,
-              reason: 'sw_updated'
-            });
-          });
-        });
-      })
+      .then(() => self.clients.claim())
   );
 });
 
-// Fetch event - Network First strategy para HTML/JS, Cache First para assets
+// Fetch event - serve from cache, fallback to network
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   
@@ -84,61 +62,36 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  const url = new URL(request.url);
-  
-  // Network First para HTML, JS, e JSON (sempre busca versão mais recente)
-  if (
-    request.url.includes('.html') || 
-    request.url.includes('.js') || 
-    request.url.includes('.json') ||
-    request.url.endsWith('/carcare/') ||
-    request.url.endsWith('/carcare')
-  ) {
-    event.respondWith(
-      fetch(request)
-        .then((networkResponse) => {
-          // Cache a nova versão
-          if (networkResponse && networkResponse.status === 200) {
-            const responseToCache = networkResponse.clone();
-            caches.open(DYNAMIC_CACHE).then((cache) => {
-              cache.put(request, responseToCache);
-            });
-          }
-          return networkResponse;
-        })
-        .catch(() => {
-          // Se offline, tenta buscar do cache
-          return caches.match(request).then((cachedResponse) => {
-            return cachedResponse || caches.match('/carcare/');
-          });
-        })
-    );
-    return;
-  }
-
-  // Cache First para imagens e assets estáticos
   event.respondWith(
     caches.match(request)
       .then((cachedResponse) => {
+        // Return cached version if available
         if (cachedResponse) {
           return cachedResponse;
         }
 
+        // Otherwise fetch from network
         return fetch(request)
           .then((networkResponse) => {
+            // Don't cache non-successful responses
             if (!networkResponse || networkResponse.status !== 200 || networkResponse.type === 'error') {
               return networkResponse;
             }
 
+            // Clone the response
             const responseToCache = networkResponse.clone();
-            caches.open(DYNAMIC_CACHE).then((cache) => {
-              cache.put(request, responseToCache);
-            });
+
+            // Cache dynamic content
+            caches.open(DYNAMIC_CACHE)
+              .then((cache) => {
+                cache.put(request, responseToCache);
+              });
 
             return networkResponse;
           })
           .catch(() => {
-            return caches.match('/carcare/');
+            // Return offline page if available
+            return caches.match('./index.html');
           });
       })
   );
@@ -150,30 +103,8 @@ self.addEventListener('sync', (event) => {
   
   if (event.tag === 'sync-data') {
     event.waitUntil(
+      // Sync logic here if needed
       Promise.resolve()
-    );
-  }
-});
-
-// Message handler para comandos do cliente
-self.addEventListener('message', (event) => {
-  console.log('[ServiceWorker] Message received:', event.data);
-  
-  if (event.data && event.data.type === 'SKIP_WAITING') {
-    self.skipWaiting();
-  }
-  
-  if (event.data && event.data.type === 'CLEAR_CACHE') {
-    event.waitUntil(
-      caches.keys().then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName.startsWith('carcare-')) {
-              return caches.delete(cacheName);
-            }
-          })
-        );
-      })
     );
   }
 });
@@ -184,8 +115,8 @@ self.addEventListener('push', (event) => {
   
   const options = {
     body: event.data ? event.data.text() : 'Nova notificação do CarCare',
-    icon: '/icon-192.svg',
-    badge: '/icon-192.svg',
+    icon: './icon-192.svg',
+    badge: './icon-192.svg',
     vibrate: [200, 100, 200]
   };
 
@@ -201,6 +132,6 @@ self.addEventListener('notificationclick', (event) => {
   event.notification.close();
   
   event.waitUntil(
-    clients.openWindow('/')
+    clients.openWindow('./')
   );
 });

@@ -2,23 +2,22 @@
   "name": "CarCare - Sistema de Controle Veicular",
   "short_name": "CarCare",
   "description": "Sistema completo de controle de manutenção veicular",
-  "start_url": "/carcare/",
-  "scope": "/carcare/",
+  "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#2563eb",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/carcare/icon-192.png",
+      "src": "./icon-192.svg",
       "sizes": "192x192",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     },
     {
-      "src": "/carcare/icon-512.png",
+      "src": "./icon-512.svg",
       "sizes": "512x512",
-      "type": "image/png",
+      "type": "image/svg+xml",
       "purpose": "any maskable"
     }
   ],
@@ -29,12 +28,12 @@
       "name": "Veículos",
       "short_name": "Veículos",
       "description": "Gerenciar veículos",
-      "url": "/carcare/vehicles",
+      "url": "./#/vehicles",
       "icons": [
         {
-          "src": "/carcare/icon-192.png",
+          "src": "./icon-192.svg",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/svg+xml"
         }
       ]
     },
@@ -42,12 +41,12 @@
       "name": "Manutenções",
       "short_name": "Manutenções",
       "description": "Registrar manutenções",
-      "url": "/carcare/maintenances",
+      "url": "./#/maintenances",
       "icons": [
         {
-          "src": "/carcare/icon-192.png",
+          "src": "./icon-192.svg",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/svg+xml"
         }
       ]
     }

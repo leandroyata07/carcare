@@ -7,9 +7,8 @@ import './index.css'
 // Register Service Worker for PWA
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
-    const swPath = '/carcare/service-worker.js'
     navigator.serviceWorker
-      .register(swPath)
+      .register(`${import.meta.env.BASE_URL}service-worker.js`)
       .then((registration) => {
         console.log('ServiceWorker registered:', registration.scope)
       })

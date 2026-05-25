@@ -1,4 +1,4 @@
-import { createRouter, createRoute, createRootRoute, redirect } from '@tanstack/react-router'
+import { createRouter, createRoute, createRootRoute, redirect, createHashHistory } from '@tanstack/react-router'
 import { RootLayout } from '@/components/layouts/root-layout'
 import { AuthLayout } from '@/components/layouts/auth-layout'
 import { DashboardLayout } from '@/components/layouts/dashboard-layout'
@@ -13,19 +13,11 @@ import { SettingsPage } from '@/pages/settings'
 import { HelpPage } from '@/pages/help'
 import { AboutPage } from '@/pages/about'
 import { ReportsPage } from '@/pages/reports'
-import { NotificationsPage } from '@/pages/notifications'
 import { useAuthStore } from '@/stores/auth-store'
 
 // Root route
 const rootRoute = createRootRoute({
   component: RootLayout,
-  beforeLoad: () => {
-    const { isAuthenticated } = useAuthStore.getState()
-    // Se não estiver autenticado e tentar acessar a raiz, redireciona para login
-    if (!isAuthenticated && window.location.pathname === '/') {
-      throw redirect({ to: '/login' })
-    }
-  },
 })
 
 // Auth layout route
@@ -134,12 +126,6 @@ const reportsRoute = createRoute({
   component: ReportsPage,
 })
 
-const notificationsRoute = createRoute({
-  getParentRoute: () => dashboardLayoutRoute,
-  path: '/notifications',
-  component: NotificationsPage,
-})
-
 // Build route tree
 const routeTree = rootRoute.addChildren([
   authLayoutRoute.addChildren([loginRoute]),
@@ -152,17 +138,18 @@ const routeTree = rootRoute.addChildren([
     usersRoute,
     settingsRoute,
     reportsRoute,
-    notificationsRoute,
     helpRoute,
     aboutRoute,
   ]),
 ])
 
 // Create router
+const hashHistory = createHashHistory()
+
 export const router = createRouter({
   routeTree,
   defaultPreload: 'intent',
-  basepath: '/carcare',
+  history: hashHistory,
 })
 
 // Type declaration for router

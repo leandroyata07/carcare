@@ -15,6 +15,7 @@ import { exportBackup, importBackup } from '@/lib/utils'
 import { Download, Upload, Moon, Sun, Bell, Database, AlertTriangle, CheckCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 
+
 export function SettingsPage() {
   const { currentUser, users } = useAuthStore()
   const { vehicles } = useVehicleStore()
@@ -52,29 +53,26 @@ export function SettingsPage() {
         return
       }
 
-      const data = res.data
-      if (!data) {
-        toast({ title: 'Erro ao restaurar backup', description: 'Dados inválidos', variant: 'destructive' })
-        return
-      }
-
-      if (data.vehicles) {
-        localStorage.setItem('carcare-vehicles', JSON.stringify({ state: { vehicles: data.vehicles, currentVehicleId: null } }))
-      }
-      if (data.maintenances) {
-        localStorage.setItem('carcare-maintenances', JSON.stringify({ state: { maintenances: data.maintenances } }))
-      }
-      if (data.ipvas) {
-        localStorage.setItem('carcare-ipvas', JSON.stringify({ state: { ipvas: data.ipvas } }))
-      }
-      if (data.categories) {
-        localStorage.setItem('carcare-categories', JSON.stringify({ state: { categories: data.categories } }))
-      }
-      if (data.settings) {
-        localStorage.setItem('carcare-settings', JSON.stringify({ state: { settings: data.settings } }))
-      }
-      if (data.users) {
-        localStorage.setItem('carcare-auth', JSON.stringify({ state: { users: data.users, currentUser: null, isAuthenticated: false } }))
+      const data = res.ok ? res.data : undefined
+      if (data) {
+        if (data.vehicles) {
+          localStorage.setItem('carcare-vehicles', JSON.stringify({ state: { vehicles: data.vehicles, currentVehicleId: null } }))
+        }
+        if (data.maintenances) {
+          localStorage.setItem('carcare-maintenances', JSON.stringify({ state: { maintenances: data.maintenances } }))
+        }
+        if (data.ipvas) {
+          localStorage.setItem('carcare-ipvas', JSON.stringify({ state: { ipvas: data.ipvas } }))
+        }
+        if (data.categories) {
+          localStorage.setItem('carcare-categories', JSON.stringify({ state: { categories: data.categories } }))
+        }
+        if (data.settings) {
+          localStorage.setItem('carcare-settings', JSON.stringify({ state: { settings: data.settings } }))
+        }
+        if (data.users) {
+          localStorage.setItem('carcare-auth', JSON.stringify({ state: { users: data.users, currentUser: null, isAuthenticated: false } }))
+        }
       }
 
       toast({ title: 'Backup restaurado!', description: 'Recarregando a página para aplicar as mudanças...' })
@@ -185,7 +183,7 @@ export function SettingsPage() {
                 <Input id="confirmPassword" type="password" {...pwForm.register('confirmPassword')} />
               </div>
 
-              <Button type="submit">Alterar senha</Button>
+              <Button type="submit" className="w-full">Alterar senha</Button>
             </form>
           </CardContent>
         </Card>
@@ -228,7 +226,7 @@ export function SettingsPage() {
             </p>
           </div>
 
-          <Button onClick={handleSaveSettings}>
+          <Button onClick={handleSaveSettings} className="w-full">
             Salvar Configurações
           </Button>
         </CardContent>

@@ -4,14 +4,10 @@ import { User, UserForm } from '@/lib/schemas'
 import { generateUUID } from '@/lib/utils'
 import { DEFAULT_ADMIN } from '@/lib/constants'
 
-// Tempo de expiração da sessão em milissegundos (8 horas)
-const SESSION_TIMEOUT = 8 * 60 * 60 * 1000
-
 interface AuthState {
   currentUser: User | null
   users: User[]
   isAuthenticated: boolean
-  sessionStartTime: number | null
   login: (username: string, password: string) => boolean
   logout: () => void
   register: (data: UserForm) => User
@@ -20,8 +16,6 @@ interface AuthState {
   deleteUser: (id: string) => void
   changePassword: (id: string, newPassword: string) => void
   initializeDefaultUser: () => void
-  checkSession: () => boolean
-  isSessionExpired: () => boolean
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -30,7 +24,6 @@ export const useAuthStore = create<AuthState>()(
       currentUser: null,
       users: [],
       isAuthenticated: false,
-      sessionStartTime: null,
 
       initializeDefaultUser: () => {
         const { users } = get()
@@ -46,30 +39,6 @@ export const useAuthStore = create<AuthState>()(
         }
       },
 
-      isSessionExpired: () => {
-        const { sessionStartTime, isAuthenticated } = get()
-        
-        if (!isAuthenticated || !sessionStartTime) {
-          return true
-        }
-
-        const now = Date.now()
-        const elapsed = now - sessionStartTime
-        
-        return elapsed > SESSION_TIMEOUT
-      },
-
-      checkSession: () => {
-        const { isSessionExpired, logout } = get()
-        
-        if (isSessionExpired()) {
-          logout()
-          return false
-        }
-        
-        return true
-      },
-
       login: (username: string, password: string) => {
         const { users } = get()
         const user = users.find(
@@ -77,22 +46,14 @@ export const useAuthStore = create<AuthState>()(
         )
         
         if (user) {
-          set({ 
-            currentUser: user, 
-            isAuthenticated: true,
-            sessionStartTime: Date.now()
-          })
+          set({ currentUser: user, isAuthenticated: true })
           return true
         }
         return false
       },
 
       logout: () => {
-        set({ 
-          currentUser: null, 
-          isAuthenticated: false,
-          sessionStartTime: null
-        })
+        set({ currentUser: null, isAuthenticated: false })
       },
 
       register: (data: UserForm) => {

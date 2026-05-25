@@ -65,7 +65,6 @@ export const vehicleSchema = z.object({
     .regex(/^[A-Z]{3}-\d{4}$|^[A-Z]{3}\d[A-Z]\d{2}$/, 'Placa inválida (ABC-1234 ou ABC1D23)'),
   color: z.string().optional(),
   mileage: z.number().min(0, 'Quilometragem não pode ser negativa'),
-  mileageDate: z.string().optional(),
   fuelType: z.enum(['Gasoline', 'Ethanol', 'Diesel', 'Flex', 'Electric', 'Hybrid']).default('Gasoline'),
   chassisNumber: z.string().optional(),
   renavam: z.string().optional(),
@@ -91,19 +90,18 @@ export const vehicleFormSchema = z.object({
     .max(new Date().getFullYear() + 1, 'Ano não pode ser no futuro'),
   plate: z.string()
     .regex(/^[A-Z]{3}-\d{4}$|^[A-Z]{3}\d[A-Z]\d{2}$/, 'Placa inválida (ABC-1234 ou ABC1D23)'),
-  color: z.string().optional(),
+  color: z.string().optional().or(z.literal('')),
   mileage: z.number().min(0, 'Quilometragem não pode ser negativa'),
-  mileageDate: z.string().optional(),
   fuelType: z.enum(['Gasoline', 'Ethanol', 'Diesel', 'Flex', 'Electric', 'Hybrid']).default('Gasoline'),
-  chassisNumber: z.string().optional(),
-  renavam: z.string().optional(),
-  engineNumber: z.string().optional(),
-  purchaseDate: z.string().optional(),
-  purchaseValue: z.number().min(0).optional(),
-  insuranceCompany: z.string().optional(),
-  insurancePolicy: z.string().optional(),
-  insuranceExpiry: z.string().optional(),
-  notes: z.string().optional(),
+  chassisNumber: z.string().optional().or(z.literal('')),
+  renavam: z.string().optional().or(z.literal('')),
+  engineNumber: z.string().optional().or(z.literal('')),
+  purchaseDate: z.string().optional().or(z.literal('')),
+  purchaseValue: z.number().min(0).optional().or(z.literal('')),
+  insuranceCompany: z.string().optional().or(z.literal('')),
+  insurancePolicy: z.string().optional().or(z.literal('')),
+  insuranceExpiry: z.string().optional().or(z.literal('')),
+  notes: z.string().optional().or(z.literal('')),
   photo: z.string().optional(),
 })
 
@@ -147,7 +145,6 @@ export const maintenanceSchema = z.object({
   location: z.string().min(2, 'Local deve ter no mínimo 2 caracteres'),
   value: z.number().min(0, 'Valor não pode ser negativo'),
   nextChange: z.number().min(0, 'Próxima troca não pode ser negativa').optional(),
-  nextChangeDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida (formato: YYYY-MM-DD)').optional(),
   photo: z.string().optional(), // base64
   userId: z.string().uuid(),
   createdAt: z.string().datetime(),
@@ -163,7 +160,6 @@ export const maintenanceFormSchema = z.object({
   location: z.string().min(2, 'Local deve ter no mínimo 2 caracteres'),
   value: z.number().min(0, 'Valor não pode ser negativo'),
   nextChange: z.number().min(0, 'Próxima troca não pode ser negativa').optional().or(z.literal('')),
-  nextChangeDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, 'Data inválida (formato: YYYY-MM-DD)').optional().or(z.literal('')),
   photo: z.string().optional(),
 })
 

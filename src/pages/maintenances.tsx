@@ -51,7 +51,6 @@ export function MaintenancesPage() {
       location: '',
       value: 0,
       nextChange: undefined,
-      nextChangeDate: undefined,
       photo: '',
     },
   })
@@ -96,7 +95,7 @@ export function MaintenancesPage() {
         
         // Atualiza a quilometragem do veículo se for maior
         if (data.mileage > currentVehicle.mileage) {
-          updateMileage(currentVehicle.id, data.mileage, data.date)
+          updateMileage(currentVehicle.id, data.mileage)
         }
         
         toast({
@@ -127,7 +126,6 @@ export function MaintenancesPage() {
       setValue('location', maintenance.location)
       setValue('value', maintenance.value)
       setValue('nextChange', maintenance.nextChange)
-      setValue('nextChangeDate', maintenance.nextChangeDate)
       setValue('photo', maintenance.photo || '')
       setImagePreview(maintenance.photo || null)
       setIsDialogOpen(true)
@@ -157,7 +155,6 @@ export function MaintenancesPage() {
       location: '',
       value: 0,
       nextChange: undefined,
-      nextChangeDate: undefined,
       photo: '',
     })
   }
@@ -357,36 +354,19 @@ export function MaintenancesPage() {
               </div>
 
               {/* Próxima Troca */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="nextChange">Próxima Troca (km)</Label>
-                  <Input
-                    id="nextChange"
-                    type="number"
-                    {...register('nextChange', { 
-                      setValueAs: (v) => v === '' ? undefined : Number(v) 
-                    })}
-                    placeholder="Ex: 20000 (opcional)"
-                  />
-                  {errors.nextChange && (
-                    <p className="text-sm text-destructive">{errors.nextChange.message}</p>
-                  )}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="nextChangeDate">Próxima Troca (data)</Label>
-                  <Input
-                    id="nextChangeDate"
-                    type="date"
-                    {...register('nextChangeDate')}
-                  />
-                  {errors.nextChangeDate && (
-                    <p className="text-sm text-destructive">{errors.nextChangeDate.message}</p>
-                  )}
-                  <p className="text-xs text-muted-foreground">
-                    O que ocorrer primeiro: km ou data
-                  </p>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="nextChange">Próxima Troca (km)</Label>
+                <Input
+                  id="nextChange"
+                  type="number"
+                  {...register('nextChange', { 
+                    setValueAs: (v) => v === '' ? undefined : Number(v) 
+                  })}
+                  placeholder="Ex: 20000 (opcional)"
+                />
+                {errors.nextChange && (
+                  <p className="text-sm text-destructive">{errors.nextChange.message}</p>
+                )}
               </div>
 
               {/* Foto/Nota Fiscal */}
@@ -598,20 +578,10 @@ export function MaintenancesPage() {
                       {formatCurrency(maintenance.value)}
                     </div>
 
-                    {(maintenance.nextChange || maintenance.nextChangeDate) && (
-                      <div className="space-y-1">
-                        {maintenance.nextChange && (
-                          <div className="flex items-center gap-2 text-sm text-blue-600">
-                            <AlertTriangle className="w-4 h-4" />
-                            Próxima: {maintenance.nextChange.toLocaleString('pt-BR')} km
-                          </div>
-                        )}
-                        {maintenance.nextChangeDate && (
-                          <div className="flex items-center gap-2 text-sm text-blue-600">
-                            <Calendar className="w-4 h-4" />
-                            Próxima: {formatDate(maintenance.nextChangeDate)}
-                          </div>
-                        )}
+                    {maintenance.nextChange && (
+                      <div className="flex items-center gap-2 text-sm text-blue-600">
+                        <AlertTriangle className="w-4 h-4" />
+                        Próxima: {maintenance.nextChange.toLocaleString('pt-BR')} km
                       </div>
                     )}
                   </div>

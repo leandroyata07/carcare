@@ -54,35 +54,13 @@ export function VehicleFormDialog({
 
   const form = useForm<VehicleForm>({
     resolver: zodResolver(vehicleFormSchema),
-    defaultValues: editingVehicle ? {
-      type: editingVehicle.type,
-      brand: editingVehicle.brand,
-      model: editingVehicle.model,
-      year: editingVehicle.year,
-      plate: editingVehicle.plate,
-      mileage: editingVehicle.mileage,
-      mileageDate: editingVehicle.mileageDate || new Date().toISOString().split('T')[0],
-      color: editingVehicle.color,
-      fuelType: editingVehicle.fuelType,
-      chassisNumber: editingVehicle.chassisNumber,
-      renavam: editingVehicle.renavam,
-      engineNumber: editingVehicle.engineNumber,
-      purchaseDate: editingVehicle.purchaseDate,
-      purchaseValue: editingVehicle.purchaseValue,
-      insuranceCompany: editingVehicle.insuranceCompany,
-      insurancePolicy: editingVehicle.insurancePolicy,
-      insuranceExpiry: editingVehicle.insuranceExpiry,
-      notes: editingVehicle.notes,
-      photo: editingVehicle.photo,
-    } : {
+    defaultValues: editingVehicle || {
       type: 'car',
       brand: '',
       model: '',
       year: new Date().getFullYear(),
       plate: '',
       mileage: 0,
-      mileageDate: new Date().toISOString().split('T')[0],
-      fuelType: 'Gasoline',
       photo: undefined,
     },
   })
@@ -131,37 +109,17 @@ export function VehicleFormDialog({
   }
 
   const onSubmit = (data: VehicleForm) => {
-    console.log('=== FORM SUBMIT CALLED ===')
-    console.log('Form Data:', data)
-    console.log('Current User:', currentUser)
-    
-    if (!currentUser) {
-      console.error('No current user found!')
-      toast({
-        variant: 'destructive',
-        title: 'Erro de autenticação',
-        description: 'Usuário não encontrado. Faça login novamente.',
-      })
-      return
-    }
-
-    // Ensure mileageDate is always set
-    const vehicleData = {
-      ...data,
-      mileageDate: data.mileageDate || new Date().toISOString().split('T')[0],
-    }
+    if (!currentUser) return
 
     try {
       if (editingVehicle) {
-        console.log('Updating vehicle:', editingVehicle.id)
-        updateVehicle(editingVehicle.id, vehicleData)
+        updateVehicle(editingVehicle.id, data)
         toast({
           title: 'Veículo atualizado!',
           description: 'As alterações foram salvas com sucesso',
         })
       } else {
-        console.log('Adding new vehicle for user:', currentUser.id)
-        addVehicle(vehicleData, currentUser.id)
+        addVehicle(data, currentUser.id)
         toast({
           title: 'Veículo cadastrado!',
           description: 'Seu veículo foi adicionado com sucesso',
@@ -171,27 +129,13 @@ export function VehicleFormDialog({
       form.reset()
       setPhotoPreview(undefined)
       onOpenChange(false)
-      console.log('=== FORM SUBMIT SUCCESS ===')
     } catch (error) {
-      console.error('=== FORM SUBMIT ERROR ===', error)
       toast({
         variant: 'destructive',
         title: 'Erro ao salvar',
         description: error instanceof Error ? error.message : 'Tente novamente',
       })
     }
-  }
-
-  const onError = (errors: any) => {
-    console.error('=== FORM VALIDATION ERRORS ===')
-    console.error('Errors:', errors)
-    console.error('Form Values:', form.getValues())
-    const firstError = Object.values(errors)[0] as any
-    toast({
-      variant: 'destructive',
-      title: 'Erro no formulário',
-      description: firstError?.message || 'Verifique os campos obrigatórios',
-    })
   }
 
   return (
@@ -210,7 +154,7 @@ export function VehicleFormDialog({
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit, onError)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Photo Upload */}
             <div className="space-y-2">
               <Label>Foto do Veículo (opcional)</Label>
@@ -359,7 +303,7 @@ export function VehicleFormDialog({
                 name="mileage"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Quilometragem Atual (km) *</FormLabel>
+                    <FormLabel>Quilometragem Atual</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -375,8 +319,6 @@ export function VehicleFormDialog({
                   </FormItem>
                 )}
               />
-
-              {/* Mileage Date - Hidden temporarily, auto-filled with today's date */}
             </div>
 
             <DialogFooter>
@@ -387,11 +329,7 @@ export function VehicleFormDialog({
               >
                 Cancelar
               </Button>
-              <Button 
-                type="submit" 
-                disabled={form.formState.isSubmitting}
-                onClick={() => console.log('Submit button clicked! Form state:', form.formState)}
-              >
+              <Button type="submit" disabled={form.formState.isSubmitting}>
                 {form.formState.isSubmitting
                   ? 'Salvando...'
                   : editingVehicle

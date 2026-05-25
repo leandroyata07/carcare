@@ -17,8 +17,8 @@ export function PWAInstallPrompt() {
       e.preventDefault()
       setDeferredPrompt(e as BeforeInstallPromptEvent)
       
-      // Check if user has previously dismissed (only in this session)
-      const dismissed = sessionStorage.getItem('pwa-install-dismissed')
+      // Check if user has previously dismissed
+      const dismissed = localStorage.getItem('pwa-install-dismissed')
       if (!dismissed) {
         setShowPrompt(true)
       }
@@ -47,8 +47,7 @@ export function PWAInstallPrompt() {
 
   const handleDismiss = () => {
     setShowPrompt(false)
-    // Salvar apenas na sessão (não permanente)
-    sessionStorage.setItem('pwa-install-dismissed', 'true')
+    localStorage.setItem('pwa-install-dismissed', 'true')
   }
 
   if (!showPrompt) return null

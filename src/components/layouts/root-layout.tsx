@@ -1,5 +1,5 @@
-import { Outlet } from '@tanstack/react-router'
-import { useEffect, useRef } from 'react'
+import { Outlet, Link } from '@tanstack/react-router'
+import { useEffect, useState, useRef } from 'react'
 import { useAuthStore } from '@/stores/auth-store'
 import { useSettingsStore } from '@/stores/settings-store'
 import { useVehicleStore } from '@/stores/vehicle-store'
@@ -7,65 +7,31 @@ import { useMaintenanceStore } from '@/stores/maintenance-store'
 import { useIPVAStore } from '@/stores/ipva-store'
 import { Toaster } from '@/components/ui/toaster'
 import { PWAInstallPrompt } from '@/components/ui/pwa-install-prompt'
-import { PWAUpdatePrompt } from '@/components/pwa-update-prompt'
-import { SessionManager } from '@/components/session-manager'
 import { useToast } from '@/hooks/use-toast'
-import { initVersionListener, getLocalVersion, fetchServerVersion } from '@/lib/version-checker'
+import { DEFAULT_ADMIN } from '@/lib/constants'
 
 export function RootLayout() {
   const { settings } = useSettingsStore()
-  const { initializeDefaultUser, currentUser } = useAuthStore()
+  const { initializeDefaultUser, users, currentUser } = useAuthStore()
   const { getUserVehicles } = useVehicleStore()
   const { getUpcomingMaintenances } = useMaintenanceStore()
   const { getUpcomingIPVAs } = useIPVAStore()
   const { toast } = useToast()
 
+  const [showDemoWarning, setShowDemoWarning] = useState(() => {
+    try {
+      return localStorage.getItem('carcare-demo-warning-dismissed') !== 'true'
+    } catch {
+      return true
+    }
+  })
+
   const notifiedRef = useRef<Set<string>>(new Set())
-  const versionNotifiedRef = useRef(false)
 
   useEffect(() => {
     // Initialize default admin user if no users exist
     initializeDefaultUser()
   }, [initializeDefaultUser])
-
-  // Inicializa o listener de versão (FORÇA RELOAD QUANDO SW ATUALIZA)
-  useEffect(() => {
-    initVersionListener()
-    console.log('[RootLayout] Version listener initialized')
-  }, [])
-
-  // Verifica se o sistema foi recém atualizado e mostra notificação
-  useEffect(() => {
-    if (versionNotifiedRef.current) return
-    if (!currentUser) return
-
-    const checkVersion = async () => {
-      const localVersion = getLocalVersion()
-      if (!localVersion) {
-        // Primeira vez, salva a versão atual
-        const serverVersionInfo = await fetchServerVersion()
-        if (serverVersionInfo) {
-          localStorage.setItem('carcare-app-version', serverVersionInfo.version)
-        }
-        return
-      }
-
-      // Verifica se acabou de atualizar (flag temporária)
-      const justUpdated = sessionStorage.getItem('carcare-just-updated')
-      if (justUpdated === 'true') {
-        versionNotifiedRef.current = true
-        sessionStorage.removeItem('carcare-just-updated')
-        
-        toast({
-          title: '✨ Sistema Atualizado!',
-          description: `Você está usando a versão ${localVersion}`,
-          duration: 5000,
-        })
-      }
-    }
-
-    checkVersion()
-  }, [currentUser, toast])
 
   useEffect(() => {
     // Apply dark mode class to document
@@ -75,6 +41,11 @@ export function RootLayout() {
       document.documentElement.classList.remove('dark')
     }
   }, [settings.darkMode])
+
+  // Demo warning detection: check if default admin (with default password) still exists
+  const defaultAdminPresent = users.some(
+    (u) => u.username === DEFAULT_ADMIN.username && u.mustChangePassword === true,
+  )
 
   // Notifications: check periodically for upcoming maintenances and IPVAs
   useEffect(() => {
@@ -118,11 +89,30 @@ export function RootLayout() {
 
   return (
     <>
-      <SessionManager />
+      {defaultAdminPresent && showDemoWarning && (
+        <div className="w-full bg-yellow-50 border-b border-yellow-200 text-yellow-900 p-3">
+          <div className="max-w-6xl mx-auto flex items-center justify-between gap-4">
+            <div>
+              <strong>Atenção:</strong> Esta instalação está com o usuário admin padrão ativo. Não use dados reais.
+            </div>
+            <div className="flex items-center gap-2">
+              <Link to="/users" className="underline text-sm">Alterar senha</Link>
+              <button
+                className="text-sm px-3 py-1 bg-yellow-200 rounded"
+                onClick={() => {
+                  try { localStorage.setItem('carcare-demo-warning-dismissed', 'true') } catch {}
+                  setShowDemoWarning(false)
+                }}
+              >
+                Fechar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <Outlet />
       <Toaster />
       <PWAInstallPrompt />
-      <PWAUpdatePrompt />
     </>
   )
 }

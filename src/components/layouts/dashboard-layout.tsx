@@ -76,7 +76,7 @@ export function DashboardLayout() {
 
   const handleLogout = () => {
     logout()
-    window.location.href = '/carcare/login'
+    window.location.href = '/login'
   }
 
   return (

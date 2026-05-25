@@ -22,7 +22,6 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { useToast } from '@/hooks/use-toast'
-import { checkForUpdates, setLocalVersion, forceUpdate } from '@/lib/version-checker'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -37,50 +36,24 @@ export function LoginPage() {
     },
   })
 
-  const onSubmit = async (data: LoginForm) => {
-    // VERIFICA VERSÃO ANTES DO LOGIN
-    const versionCheck = await checkForUpdates()
-    
-    if (versionCheck.hasUpdate && versionCheck.serverVersion) {
-      console.log('[Login] Nova versão detectada, forçando atualização...')
-      
-      // Mostra toast de atualização
-      toast({
-        title: '🔄 Atualizando sistema...',
-        description: `Carregando versão ${versionCheck.serverVersion}`,
-      })
-
-      // Salva a nova versão
-      setLocalVersion(versionCheck.serverVersion)
-
-      // Aguarda um pouco para o usuário ver a mensagem
-      setTimeout(() => {
-        forceUpdate()
-      }, 1500)
-      
-      return
-    }
-
-    // PROSSEGUE COM LOGIN NORMAL
+  const onSubmit = (data: LoginForm) => {
     const success = login(data.username, data.password)
 
     if (success) {
       const usr = useAuthStore.getState().currentUser
-      
-      // Mostra recomendação de trocar senha se necessário
       if (usr?.mustChangePassword) {
         toast({
           title: 'Trocar senha',
-          description: 'É recomendado alterar a senha padrão.',
+          description: 'É obrigatório alterar a senha padrão antes de continuar',
         })
+        navigate({ to: '/settings' })
+        return
       }
 
       toast({
         title: 'Login realizado!',
         description: 'Bem-vindo ao CarCare',
       })
-      
-      // Sempre vai para o dashboard
       navigate({ to: '/' })
     } else {
       toast({
@@ -167,7 +140,7 @@ export function LoginPage() {
 
               <Button 
                 type="submit" 
-                className="w-full h-11 text-base font-semibold bg-blue-600 hover:bg-blue-700 shadow-lg hover:shadow-xl transition-all duration-200" 
+                className="w-full h-11 text-base font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105" 
                 size="lg"
               >
                 Entrar

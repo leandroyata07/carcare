@@ -285,7 +285,7 @@ export function VehiclesPage() {
               Gerencie todos os seus veículos em um só lugar
             </p>
           </div>
-          <Badge variant="info" className="text-lg px-4 py-2 whitespace-nowrap">
+          <Badge variant="info" className="text-lg px-4 py-2">
             {userVehicles.length} {userVehicles.length === 1 ? 'veículo' : 'veículos'}
           </Badge>
         </div>
@@ -349,7 +349,7 @@ export function VehiclesPage() {
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button onClick={() => setEditingVehicle(null)} size="lg" className="bg-blue-600 hover:bg-blue-700">
+              <Button onClick={() => setEditingVehicle(null)} size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
                 <Plus className="h-4 w-4 mr-2" />
                 Novo Veículo
               </Button>
